@@ -1,3 +1,9 @@
 /build
 /out
 /.vs
+/.cache
+/CMakeFiles
+build.ninja
+cmake_install.cmake
+CMakeCache.txt
+compile_commands.json

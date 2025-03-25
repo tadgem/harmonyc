@@ -33,8 +33,7 @@ namespace harmony
 		{
 			return Memory
 			{
-				.mAllocatedBytes = MemorySize,
-				.mMemory = static_cast<uint8*>(mi_malloc(MemorySize))
+				MemorySize, static_cast<uint8*>(mi_malloc(MemorySize))
 			};
 		}
 	};
