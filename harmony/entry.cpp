@@ -35,6 +35,11 @@ int main() {
   uint64 size = GIGABYTES(4);
   Memory mem = Memory::Create<GIGABYTES(4)>();
 
+  // pass mimalloc functions so SDL uses the same memory space.
+  SDL_SetMemoryFunctions(
+      mi_malloc, mi_calloc, mi_realloc, mi_free
+  );
+
   Vector<int32> intList(("int list"));
   intList.push_back(1);
   intList.push_back(2);
