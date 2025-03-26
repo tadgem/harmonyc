@@ -9,6 +9,10 @@
 #include "engine.h"
 #include "memory.h"
 #include "vk_tech.h"
+
+#define FLECS_USE_OS_ALLOC
+#include "flecs.h"
+#include "flecs/addons/cpp/flecs.hpp"
 #include "harmony_unity.cpp"
 
 HARMONY_OVERRIDE_GLOBAL_NEW(true)
@@ -29,9 +33,8 @@ int main() {
   using namespace eastl;
   using namespace harmony;
   
-  uint64 size = GIGABYTES(4);
   // TODO: Map some block of memory to mimalloc
-  // Memory mem = Memory::Create<GIGABYTES(4)>();
+  Memory mem = Memory::Create<GIGABYTES(4)>();
 
   // pass mimalloc functions so SDL uses the same memory space.
   SDL_SetMemoryFunctions(
@@ -39,6 +42,15 @@ int main() {
   );
 
   Engine engine = Engine::Init();
+
+  flecs::world ecs{};
+  flecs::entity e = ecs.entity();
+  e.insert([](glm::vec3 position)
+      {
+          position = { 1,2,3 };
+      });
+
+
 
   while (engine.ShouldRun())
   {

@@ -12,30 +12,11 @@ namespace harmony
 		lvk::LvkIm3dState	mIm3D;
 		bool				mEnableMSAA = false;
 
-		static Engine Init(uint32 swapchainWidth = 1920, uint32 swapchainHeight = 1080, bool enableMSAA = false)
-		{
-			lvk::VkState vk = lvk::init::Create<lvk::VkSDL>("Harmony Engine", swapchainWidth, swapchainHeight, enableMSAA);
-			lvk::LvkIm3dState im3d = lvk::LoadIm3D(vk);
+		static Engine Init(uint32 swapchainWidth = 1920, uint32 swapchainHeight = 1080, bool enableMSAA = false);
 
-			return Engine{ std::move(vk), im3d, enableMSAA };
-		}
-
-		bool ShouldRun()
-		{
-			return mVK.m_Backend->ShouldRun(mVK);
-		}
-
-		void PreFrame()
-		{
-			mVK.m_Backend->PreFrame(mVK);
-			Im3d::NewFrame();
-		}
-
-		void EndFrame()
-		{
-			Im3d::EndFrame();
-			mVK.m_Backend->PostFrame(mVK);
-		}
+		bool ShouldRun();
+		void PreFrame();
+		void EndFrame();
 
 	};
 }

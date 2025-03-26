@@ -24,34 +24,41 @@ void* __cdecl operator new[](size_t size, unsigned __int64, unsigned __int64,\
 namespace harmony
 {
 	/// <summary>
-	/// Given a size, begin address & end address
-	/// allow allocation of any given type, 
-	/// reusing previously freed locations
-	/// </summary>
-	struct FixedRangeAllocator
-	{
-		const uint64	mSize;
-		const void*		mBegin;
-		const void*		mEnd;
-		
-		void*			mHead = 0;
-	};
-
-	/// <summary>
 	/// Global struct creating memory and 
 	/// allowing creation of sub allocators for specific use cases
 	/// </summary>
 	struct Memory
 	{
-		uint64		mAllocatedBytes;
-		uint8*		mMemory;
+		uint64			mAllocatedBytes;
+		void*			mMemory;
+		mi_arena_id_t	mArenaId;
+		mi_heap_t*		mHeap;
 
 		template<uint64 MemorySize>
 		static	Memory		Create()
 		{
+			void* memory = std::malloc(MemorySize);
+			mi_option_set(mi_option_show_errors, 1);
+			mi_option_set(mi_option_verbose, 1);
+			mi_arena_id_t arenaId;
+			constexpr bool is_committed = true;
+			constexpr bool is_large = true;
+			constexpr bool is_exclusive = true;
+			constexpr bool is_zeroed = false;
+			constexpr int  numa_mode = -1;
+			mi_manage_os_memory_ex(memory, MemorySize, 
+				is_committed, is_large, is_zeroed, 
+				numa_mode, is_exclusive, &arenaId);
+
+			mi_heap_t* engineHeap = mi_heap_new_in_arena(arenaId);
+			mi_heap_set_default(engineHeap);
+
 			return Memory
 			{
-				MemorySize, static_cast<uint8*>(mi_malloc(MemorySize))
+				MemorySize,
+				memory,
+				arenaId,
+				engineHeap
 			};
 		}
 	};
