@@ -1,7 +1,25 @@
 #pragma once
 #include "primitives.h"
 #include "mimalloc.h"
-#include "EASTL/unordered_map.h"
+
+/// <summary>
+/// Macro to globally override new
+/// Used to track non-allocator'd code
+/// while still use the upfront page we create for the engine
+/// </summary>
+#define HARMONY_OVERRIDE_GLOBAL_NEW(ENABLE_PRINT)\
+void *__cdecl operator new[](size_t size, const char *name, int flags,\
+unsigned debugFlags, const char* file, int line) {\
+	ENABLE_PRINT ? printf("Unassigned Allocation!\n") : 0;\
+	return mi_malloc(size);\
+}\
+\
+void* __cdecl operator new[](size_t size, unsigned __int64, unsigned __int64,\
+	char const*, int, unsigned int, char const*,\
+	int) {\
+	ENABLE_PRINT ? printf("Unassigned Allocation!\n") : 0;\
+	return mi_malloc(size);\
+}
 
 namespace harmony
 {

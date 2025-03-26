@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 
 add_subdirectory(submodules/lvk)
 
-add_executable(harmonyc "harmony/entry.cpp")
+add_executable(harmonyc "harmony/entry.cpp" "harmony/macros.h" "harmony/vk_tech.h" "harmony/engine.h")
 
 target_compile_definitions(harmonyc PRIVATE "EASTL_EABASE_DISABLED")
 target_link_libraries(harmonyc lvk lvk-sdl)

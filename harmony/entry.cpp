@@ -1,49 +1,63 @@
-#include "EASTL/allocator_malloc.h"
-#include "EASTL/vector.h"
-#include "VkSDL.h"
-#include "harmony_unity.cpp"
-#include "lvk/lvk.h"
-#include "memory.h"
 #include <cstdio>
 
-#define KILOBYTES(X) X * 1024ULL
-#define MEGABYTES(X) X * 1024ULL * 1024ULL
-#define GIGABYTES(X) X * 1024ULL * 1024ULL * 1024ULL
+#include "EASTL/allocator_malloc.h"
+#include "EASTL/vector.h"
 
-void *__cdecl operator new[](size_t size, const char *name, int flags,
-                             unsigned debugFlags, const char *file, int line) {
-  printf("Unassigned Allocation\n");
-  return mi_malloc(size);
+#include "lvk/lvk.h"
+
+#include "macros.h"
+#include "engine.h"
+#include "memory.h"
+#include "vk_tech.h"
+#include "harmony_unity.cpp"
+
+HARMONY_OVERRIDE_GLOBAL_NEW(true)
+
+
+template <typename T> using Vector = eastl::vector<T, eastl::allocator_malloc>;
+
+void OnImGui(harmony::Engine& e)
+{
+    if (ImGui::Begin("Hello world!"))
+    {
+
+    }
+    ImGui::End();
 }
-
-void *__cdecl operator new[](size_t size, unsigned __int64, unsigned __int64,
-                             char const *, int, unsigned int, char const *,
-                             int) {
-  printf("Unassigned Allocation\n");
-  return mi_malloc(size);
-}
-
-#define ALLOCATOR_TYPE allocator_malloc
-
-using namespace eastl;
-
-template <typename T> using Vector = eastl::vector<T, ALLOCATOR_TYPE>;
-
-using namespace harmony;
 
 int main() {
+  using namespace eastl;
+  using namespace harmony;
+  
   uint64 size = GIGABYTES(4);
-  Memory mem = Memory::Create<GIGABYTES(4)>();
+  // TODO: Map some block of memory to mimalloc
+  // Memory mem = Memory::Create<GIGABYTES(4)>();
 
   // pass mimalloc functions so SDL uses the same memory space.
   SDL_SetMemoryFunctions(
       mi_malloc, mi_calloc, mi_realloc, mi_free
   );
 
-  Vector<int32> intList(("int list"));
-  intList.push_back(1);
-  intList.push_back(2);
-  intList.push_back(3);
-  printf("intList size : %llu", intList.size());
+  Engine engine = Engine::Init();
+
+  while (engine.ShouldRun())
+  {
+      engine.PreFrame();
+
+      OnImGui(engine);
+
+      // Game Loop
+      lvk::commands::RecordGraphicsCommands(engine.mVK, [&](VkCommandBuffer& cmd, uint32 frame) 
+      {
+            lvk::Array<VkClearValue, 2> clearValues{};
+            clearValues[0].color = { {0.0f, 0.0f, 0.0f, 1.0f} };
+            clearValues[1].depthStencil = { 1.0f, 0 };
+            VkTech::ClearRenderPass(engine.mVK, cmd, frame, 
+                engine.mVK.m_SwapchainImageRenderPass, engine.mVK.m_SwapChainFramebuffers[frame], engine.mVK.m_SwapChainImageExtent, clearValues);
+
+      });
+
+      engine.EndFrame();
+  }
   return 0;
 }
