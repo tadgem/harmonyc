@@ -5,9 +5,11 @@
 
 #include "lvk/lvk.h"
 
+#include "stl_alias.h"
 #include "macros.h"
 #include "engine.h"
 #include "memory.h"
+#include "assets.h"
 #include "vk_tech.h"
 
 #define FLECS_USE_OS_ALLOC
@@ -32,23 +34,21 @@ void OnImGui(harmony::Engine& e)
 int main() {
   using namespace eastl;
   using namespace harmony;
+
   
-  // TODO: Map some block of memory to mimalloc
-  Memory mem = Memory::Create<GIGABYTES(4)>();
-
-  // pass mimalloc functions so SDL uses the same memory space.
-  SDL_SetMemoryFunctions(
-      mi_malloc, mi_calloc, mi_realloc, mi_free
-  );
-
+  
   Engine engine = Engine::Init();
+
+  AssetHandle sh = AssetHandle::Invalid();
+  String someString = "Hello";
+
 
   flecs::world ecs{};
   flecs::entity e = ecs.entity();
   e.insert([](glm::vec3 position)
-      {
-          position = { 1,2,3 };
-      });
+  {
+      position = { 1,2,3 };
+  });
 
 
 

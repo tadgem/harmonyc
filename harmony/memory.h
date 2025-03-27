@@ -1,6 +1,7 @@
 #pragma once
 #include "primitives.h"
 #include "mimalloc.h"
+#include "EASTL/allocator.h"
 
 /// <summary>
 /// Macro to globally override new
@@ -23,21 +24,53 @@ void* __cdecl operator new[](size_t size, unsigned __int64, unsigned __int64,\
 
 namespace harmony
 {
+	class mimalloc_allocator
+	{
+	public:
+		EASTL_ALLOCATOR_EXPLICIT mimalloc_allocator(const char* pName = "mimalloc_allocator") {}
+		mimalloc_allocator(const mimalloc_allocator& x) {}
+		mimalloc_allocator(const mimalloc_allocator& x, const char* pName) {}
+
+		mimalloc_allocator& operator=(const mimalloc_allocator& x) {}
+
+		void* allocate(size_t n, int flags = 0) {
+			return mi_malloc(n);
+		}
+
+		void* allocate(size_t n, size_t alignment, size_t offset, int flags = 0) {
+			return mi_malloc_aligned_at(n, alignment, offset);
+		}
+
+		void  deallocate(void* p, size_t n)
+		{
+			// TODO: Verify n is size and not alignment specifier
+			return mi_free_size(p, n);
+		}
+
+		const char* get_name() const { return "mimalloc_allocator"; }
+		void        set_name(const char* pName) {};
+
+	protected:
+#if EASTL_NAME_ENABLED
+		const char* pName; // Debug name, used to track memory.
+#endif
+	};
+
 	/// <summary>
 	/// Global struct creating memory and 
 	/// allowing creation of sub allocators for specific use cases
 	/// </summary>
 	struct Memory
 	{
-		uint64			mAllocatedBytes;
-		void*			mMemory;
-		mi_arena_id_t	mArenaId;
-		mi_heap_t*		mHeap;
+		uint64				mAllocatedBytes;
+		void*				mMemory;
+		mi_arena_id_t		mArenaId;
+		mi_heap_t*			mHeap;
+		mimalloc_allocator	mDefaultAllocator;
 
-		template<uint64 MemorySize>
-		static	Memory		Create()
+		static	Memory		Create(uint64 upfrontMemory)
 		{
-			void* memory = std::malloc(MemorySize);
+			void* memory = std::malloc(upfrontMemory);
 			mi_option_set(mi_option_show_errors, 1);
 			mi_option_set(mi_option_verbose, 1);
 			mi_arena_id_t arenaId;
@@ -46,7 +79,7 @@ namespace harmony
 			constexpr bool is_exclusive = true;
 			constexpr bool is_zeroed = false;
 			constexpr int  numa_mode = -1;
-			mi_manage_os_memory_ex(memory, MemorySize, 
+			mi_manage_os_memory_ex(memory, upfrontMemory, 
 				is_committed, is_large, is_zeroed, 
 				numa_mode, is_exclusive, &arenaId);
 
@@ -55,10 +88,11 @@ namespace harmony
 
 			return Memory
 			{
-				MemorySize,
+				upfrontMemory,
 				memory,
 				arenaId,
-				engineHeap
+				engineHeap,
+				mimalloc_allocator()
 			};
 		}
 	};

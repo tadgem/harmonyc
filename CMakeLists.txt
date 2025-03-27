@@ -9,7 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 add_subdirectory(submodules/lvk)
 add_subdirectory(submodules/flecs)
 
-add_executable(harmonyc "harmony/entry.cpp" "harmony/macros.h" "harmony/vk_tech.h" "harmony/engine.h")
+add_executable(harmonyc "harmony/entry.cpp" "harmony/macros.h" "harmony/vk_tech.h" "harmony/engine.h" "harmony/stl_alias.h")
 
 target_compile_definitions(harmonyc PRIVATE "EASTL_EABASE_DISABLED")
 target_link_libraries(harmonyc lvk lvk-sdl flecs_static)

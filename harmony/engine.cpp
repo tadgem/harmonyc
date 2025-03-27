@@ -41,14 +41,21 @@ namespace harmony
 		ecs_os_set_api(&api);
 	}
 
-	Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA )
+	Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA, uint64 upfrontMemory)
 	{
+		Memory mem = Memory::Create(upfrontMemory);
+
+		// pass mimalloc functions so SDL uses the same memory space.
+		SDL_SetMemoryFunctions(
+			mi_malloc, mi_calloc, mi_realloc, mi_free
+		);
+
 		lvk::VkState vk = lvk::init::Create<lvk::VkSDL>("Harmony Engine", w, h, enableMSAA);
 		lvk::LvkIm3dState im3d = lvk::LoadIm3D(vk);
 
 		InitFlecsCustomAllocator();
 
-		return Engine{ std::move(vk), im3d, enableMSAA };
+		return Engine{ std::move(vk), std::move(mem), im3d, enableMSAA };
 	}
 
 	bool Engine::ShouldRun()
