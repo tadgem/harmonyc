@@ -1,7 +1,7 @@
 #pragma once
-#include "primitives.h"
-#include "memory.h"
-#include "vk_tech.h"
+#include "Primitives.h"
+#include "Memory.h"
+#include "VkTech.h"
 #include "VkSDL.h"
 
 namespace harmony

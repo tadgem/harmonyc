@@ -1,4 +1,4 @@
-#include "engine.h"
+#include "Engine.h"
 #define FLECS_USE_OS_ALLOC
 #include "flecs.h"
 #include "mimalloc.h"

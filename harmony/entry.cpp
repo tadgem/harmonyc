@@ -5,12 +5,12 @@
 
 #include "lvk/lvk.h"
 
-#include "stl_alias.h"
-#include "macros.h"
-#include "engine.h"
-#include "memory.h"
-#include "assets.h"
-#include "vk_tech.h"
+#include "STL.h"
+#include "Macros.h"
+#include "Engine.h"
+#include "Memory.h"
+#include "Assets.h"
+#include "VkTech.h"
 
 #define FLECS_USE_OS_ALLOC
 #include "flecs.h"

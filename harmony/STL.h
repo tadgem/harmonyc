@@ -1,6 +1,6 @@
 #pragma once
 
-#include "memory.h"
+#include "Memory.h"
 #include "EASTL/string.h"
 
 namespace harmony

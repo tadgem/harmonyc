@@ -1,5 +1,5 @@
 #pragma once
-#include "primitives.h"
+#include "Primitives.h"
 #include "mimalloc.h"
 #include "EASTL/allocator.h"
 
