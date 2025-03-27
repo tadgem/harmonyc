@@ -39,7 +39,7 @@ int main() {
   
   Engine engine = Engine::Init();
 
-  AssetHandle sh = AssetHandle::Invalid();
+  AssetHandle sh{};
   String someString = "Hello";
 
 
