@@ -51,7 +51,64 @@ namespace harmony
 	class Asset
 	{
 	public:
+		Asset(const String& path, const AssetType& type);
+		virtual ~Asset() {};
 
+		const String		mPath;
+		const AssetHandle	mHandle;
+	};
+
+	template<typename _Ty, AssetType _AssetTypeEnum>
+	class AssetT : public Asset
+	{
+	public:
+		Unique<_Ty> mData;
+
+		AssetT(const String& path, Unique<_Ty>& data) : 
+			Asset(path, _AssetTypeEnum), mData(eastl::move(data)) {};
+
+		~AssetT() {};
+	};
+
+	/// <summary>
+	/// Allows intermediate data for assets that require submission in multiple phases
+	/// e.g. load texture from disk to ram -> transfer from ram to GPU
+	/// Once AssetIntermediate has finished, the asset is moved to the ready state.
+	/// </summary>
+	class AssetIntermediate
+	{
+	public:
+		Asset* mAssetData;
+		AssetIntermediate(Asset* asset) : mAssetData(asset) {}
+
+		virtual ~AssetIntermediate() {}
+	};
+
+	template<	typename _AssetTy, 
+				typename _IntermediateType, 
+				AssetType _AssetTypeEnum>
+	class AssetIntermediateT : public AssetIntermediate
+	{
+	public:
+		_IntermediateType	mIntermediate;
+
+		AssetIntermediateT(Asset* data, _IntermediateType& inter) :
+			AssetIntermediate(data), mIntermediate(inter) {}
+
+		AssetT<_AssetTy, _AssetTypeEnum> GetConcreteAsset()
+		{
+			return static_cast<AssetT<_AssetTy, _AssetTypeEnum>>(mAssetData);
+		}
 	};
 
 }
+
+/// <summary>
+/// Allow AssetHandle to be used as a key in unordered_map
+/// </summary>
+template <> struct eastl::hash<harmony::AssetHandle> {
+	size_t operator()(const harmony::AssetHandle& ah) const {
+		return eastl::hash<int64>()(ah.mPathHash) ^
+			eastl::hash<uint8>()(static_cast<uint8>(ah.mType));
+	}
+};

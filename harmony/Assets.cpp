@@ -16,4 +16,9 @@ namespace harmony
 
 	}
 
+	Asset::Asset(const String& path, const AssetType& type) :
+		mPath(path), mHandle(path, type)
+	{
+	}
+
 }
