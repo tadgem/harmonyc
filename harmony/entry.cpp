@@ -20,7 +20,6 @@
 HARMONY_OVERRIDE_GLOBAL_NEW(true)
 
 
-template <typename T> using Vector = eastl::vector<T, eastl::allocator_malloc>;
 
 void OnImGui(harmony::Engine& e)
 {
