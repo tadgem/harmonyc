@@ -28,5 +28,5 @@
 
 #include "Engine.cpp"
 #include "Assets.cpp"
-//#include "AssetManager.cpp"
+#include "AssetManager.cpp"
 #include "STL.cpp"

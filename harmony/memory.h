@@ -56,6 +56,16 @@ namespace harmony
 #endif
 	};
 
+	template <typename T>
+	class mimalloc_default_delete
+	{
+	public:
+		void operator()(T* p) const EA_NOEXCEPT
+		{
+			static_assert(eastl::internal::is_complete_type_v<T>, "Attempting to call the destructor of an incomplete type");
+			mi_free((void*)p);
+		}
+	};
 	/// <summary>
 	/// Global struct creating memory and 
 	/// allowing creation of sub allocators for specific use cases

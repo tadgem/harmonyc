@@ -19,7 +19,7 @@ namespace harmony
 
 	
 	template<typename _Ty>
-	using Unique = eastl::unique_ptr<_Ty>;
+	using Unique = eastl::unique_ptr<_Ty, mimalloc_default_delete<_Ty>>;
 
 	template<typename _Key, typename _Value>
 	using HashMap = eastl::unordered_map <

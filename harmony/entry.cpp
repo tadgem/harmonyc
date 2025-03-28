@@ -43,12 +43,13 @@ int main() {
   SerializableAssetHandle handle(someString, AssetType::Audio);
 
   printf("Handle Str : %s\n", handle.mPath);
+  {
+      Unique<glm::vec3> someUniqueData = MakeUnique<glm::vec3>(10, 20, 30);
+      AssetT<glm::vec3, AssetType::Audio> asset(someString, someUniqueData);
+      AssetIntermediateT<glm::vec3, glm::vec3, AssetType::Audio> inter(static_cast<Asset*>(&asset), glm::vec3(0.0f));
 
-  Unique<glm::vec3> someUniqueData = MakeUnique<glm::vec3>(10, 20, 30);
-  AssetT<glm::vec3, AssetType::Audio> asset(someString, someUniqueData);
-  AssetIntermediateT<glm::vec3, glm::vec3, AssetType::Audio> inter(static_cast<Asset*>(& asset), glm::vec3(0.0f));
-  
-  glm::vec3 result = *asset.mData;
+      glm::vec3 result = *asset.mData;
+  }
 
   flecs::world ecs{};
   flecs::entity e = ecs.entity();

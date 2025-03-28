@@ -40,7 +40,7 @@ namespace harmony
         pQueuedLoads.push_back(load_info);
 
         if (onAssetLoaded != nullptr) {
-            pOnAssetLoadedCallbacks.emplace(handle, onAssetLoaded);
+            //pOnAssetLoadedCallbacks.emplace(handle, onAssetLoaded);
         }
 
         return handle;
@@ -136,6 +136,26 @@ namespace harmony
         HandleCallbacks();
         HandlePendingLoads();
         HandleAsyncTasks();
+    }
+
+    void AssetManager::HandleCallbacks()
+    {
+    }
+
+    void AssetManager::HandlePendingLoads()
+    {
+    }
+
+    void AssetManager::HandleAsyncTasks()
+    {
+    }
+
+    void AssetManager::DispatchAssetLoadTask(const AssetHandle& handle, AssetLoadInfo& info)
+    {
+    }
+
+    void AssetManager::TransitionAssetToLoaded(const AssetHandle& handle, Asset* asset_to_transition)
+    {
     }
     
 }
