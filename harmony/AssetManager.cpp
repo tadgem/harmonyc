@@ -7,7 +7,7 @@ namespace harmony
 		return AssetHandle(mPath, mType);
 	}
 
-	AssetHandle AssetManager::LoadAsset(const String& path, const AssetType& assetType, AssetLoadedCallback onAssetLoaded)
+	AssetHandle AssetManager::LoadAsset(const String& path, const AssetType& assetType, AssetIntermediateCallback onAssetLoaded)
 	{
         if (!Filesystem::exists(path.c_str())) {
             return {};
@@ -29,7 +29,7 @@ namespace harmony
         AssetHandle handle(tmp_path, assetType);
         AssetLoadInfo load_info{ tmp_path, assetType };
 
-        auto it = STL::find(pQueuedLoads.begin(), pQueuedLoads.end(), load_info);
+        auto it = stl::find(pQueuedLoads.begin(), pQueuedLoads.end(), load_info);
 
         for (auto& queued_load : pQueuedLoads) {
             if (load_info == queued_load) {
@@ -40,7 +40,7 @@ namespace harmony
         pQueuedLoads.push_back(load_info);
 
         if (onAssetLoaded != nullptr) {
-            //pOnAssetLoadedCallbacks.emplace(handle, onAssetLoaded);
+            pOnAssetLoadedCallbacks.emplace(handle, onAssetLoaded);
         }
 
         return handle;
@@ -138,24 +138,34 @@ namespace harmony
         HandleAsyncTasks();
     }
 
+    void AssetManager::Shutdown()
+    {
+        HNY_ASSERT_NOT_REACHED();
+    }
+
     void AssetManager::HandleCallbacks()
     {
+        HNY_ASSERT_NOT_REACHED();
     }
 
     void AssetManager::HandlePendingLoads()
     {
+        HNY_ASSERT_NOT_REACHED();
     }
 
     void AssetManager::HandleAsyncTasks()
     {
+        HNY_ASSERT_NOT_REACHED();
     }
 
     void AssetManager::DispatchAssetLoadTask(const AssetHandle& handle, AssetLoadInfo& info)
     {
+        HNY_ASSERT_NOT_REACHED();
     }
 
     void AssetManager::TransitionAssetToLoaded(const AssetHandle& handle, Asset* asset_to_transition)
     {
+        HNY_ASSERT_NOT_REACHED();
     }
     
 }

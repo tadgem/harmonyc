@@ -67,9 +67,7 @@ namespace harmony
 		AssetT(const String& path, Unique<_Ty>& data) : 
 			Asset(path, _AssetTypeEnum), mData(eastl::move(data)) {};
 
-		~AssetT() {
-			mData.reset();
-		};
+		~AssetT() {};
 	};
 
 	/// <summary>

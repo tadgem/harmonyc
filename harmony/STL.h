@@ -41,9 +41,15 @@ namespace harmony
 	template<typename _Ty>
 	using Future = std::future<_Ty>;
 
+	// template utils
+	template <typename _Ty>
+	static bool IsFutureReady(Future<_Ty> const& o) {
+		return o.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
+	}
+
 	namespace Filesystem = std::filesystem;
 	
-	namespace STL = eastl;
+	namespace stl = eastl;
 
 	str_hash HashString(const String& input);
 }

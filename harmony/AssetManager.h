@@ -6,7 +6,7 @@
 
 namespace harmony
 {
-	using AssetLoadCallback		= void (*)(AssetIntermediate*);
+	using AssetIntermediateCallback		= void (*)(AssetIntermediate*);
 	using AssetLoadedCallback	= void (*)(Asset*);
 	using AssetUnloadCallback	= void (*)(Asset*);
 	
@@ -28,11 +28,11 @@ namespace harmony
 	};
 
 	struct AssetLoadResult {
-		AssetIntermediate*			mLoadedAssetIntermediate = nullptr;
+		AssetIntermediate*					mLoadedAssetIntermediate = nullptr;
 		// additional assets that may be required to completely load this asset
-		Vector<AssetLoadInfo>		mNewAssetsToLoad;
+		Vector<AssetLoadInfo>				mNewAssetsToLoad;
 		// synchronous tasks associated with this asset e.g. submit texture mem to GPU in openGL
-		Vector<AssetLoadCallback>	mSynchronousAssetCallbacks;
+		Vector<AssetIntermediateCallback>	mSynchronousAssetCallbacks;
 
 	};
 
@@ -43,7 +43,7 @@ namespace harmony
 		AssetHandle LoadAsset(
 			const String& path,
 			const AssetType& assetType,
-			AssetLoadedCallback onAssetLoaded = nullptr);
+			AssetIntermediateCallback onAssetLoaded = nullptr);
 
 		void				UnloadAsset(const AssetHandle& handle);
 		Asset*				GetAsset(const AssetHandle& handle);
@@ -66,13 +66,15 @@ namespace harmony
 		HashMap<AssetHandle, Unique<Asset>>				pLoadedAssets;
 		HashMap<AssetHandle, AssetLoadResult>			pPendingSyncLoadCallbacks;
 		HashMap<AssetHandle, AssetUnloadCallback>		pPendingUnloadCallbacks;
-		HashMap<AssetHandle, AssetLoadCallback>			pOnAssetLoadedCallbacks;
+		HashMap<AssetHandle, AssetIntermediateCallback>	pOnAssetLoadedCallbacks;
 		Vector<AssetLoadInfo>							pQueuedLoads;
 		
 		static constexpr uint16 pCallbackTasksPerUpdate = 1;
 		static constexpr uint16 pMaxAsyncTasksInFlight  = 8;
 		
 		void Update();
+
+		void Shutdown();
 
 		void HandleCallbacks();
 
