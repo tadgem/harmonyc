@@ -56,6 +56,34 @@ namespace harmony
 #endif
 	};
 
+	template <class T>
+	struct STLMimallocAllocator
+	{
+		typedef T value_type;
+
+		STLMimallocAllocator() {} //default ctor not required by C++ Standard Library
+
+		// A converting copy constructor:
+		template<class U> STLMimallocAllocator(const STLMimallocAllocator<U>& o)  {}
+		template<class U> bool operator==(const STLMimallocAllocator<U>&) const
+		{
+			return true;
+		}
+		template<class U> bool operator!=(const STLMimallocAllocator<U>&) const
+		{
+			return false;
+		}
+		T* allocate(const size_t n) const
+		{
+			return static_cast<T*>(mi_malloc(sizeof(T)));
+		}
+		void deallocate(T* const p, size_t) const
+		{
+			mi_free((void*)p);
+		}
+	};
+
+
 	template <typename T>
 	class mimalloc_default_delete
 	{

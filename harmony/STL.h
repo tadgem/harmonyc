@@ -15,8 +15,8 @@ namespace harmony
 {
 	typedef eastl::basic_string<char, mimalloc_allocator> String;
 
-	template <typename T> 
-	using Vector	= eastl::vector<T, mimalloc_allocator>;
+	template <typename T, typename Allocator = mimalloc_allocator> 
+	using Vector	= eastl::vector<T, Allocator>;
 	
 	template<typename _Ty1, typename _Ty2>
 	using Pair		= eastl::pair<_Ty1, _Ty2>;

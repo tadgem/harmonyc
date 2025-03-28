@@ -11,6 +11,7 @@
 #include "Memory.h"
 #include "Assets.h"
 #include "VkTech.h"
+#include "Json.h"
 
 #define FLECS_USE_OS_ALLOC
 #include "flecs.h"
@@ -58,7 +59,9 @@ int main() {
       position = { 1,2,3 };
   });
 
-
+  Json someJson;
+  someJson["dad"] = 3;
+  int64 val = someJson["dad"];
 
   while (engine.ShouldRun())
   {
