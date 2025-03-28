@@ -16,13 +16,16 @@ namespace harmony
 	typedef eastl::basic_string<char, mimalloc_allocator> String;
 
 	template <typename T> 
-	using Vector = eastl::vector<T, mimalloc_allocator>;
+	using Vector	= eastl::vector<T, mimalloc_allocator>;
 	
+	template<typename _Ty1, typename _Ty2>
+	using Pair		= eastl::pair<_Ty1, _Ty2>;
+
 	template<typename _Ty>
-	using Unique = eastl::unique_ptr<_Ty, mimalloc_default_delete<_Ty>>;
+	using Unique	= eastl::unique_ptr<_Ty, mimalloc_default_delete<_Ty>>;
 
 	template<typename _Key, typename _Value>
-	using HashMap = eastl::unordered_map <
+	using HashMap	= eastl::unordered_map <
 		_Key,
 		_Value,
 		eastl::hash<_Key>,

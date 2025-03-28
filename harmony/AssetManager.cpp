@@ -7,7 +7,19 @@ namespace harmony
 		return AssetHandle(mPath, mType);
 	}
 
-	AssetHandle AssetManager::LoadAsset(const String& path, const AssetType& assetType, AssetLoadedCallback onAssetLoaded)
+    bool AssetManager::ProvideAssetTypeLoadFunction(const AssetType& type, LoadAssetCallback onLoad, UnloadAssetCallback onUnload)
+    {
+        if (pAssetTypeLoadFuncs.find(type) != pAssetTypeLoadFuncs.end())
+        {
+            return false;
+        }
+
+        Pair<LoadAssetCallback, UnloadAssetCallback> funcs{ onLoad, onUnload };
+
+        pAssetTypeLoadFuncs[type] = funcs;
+    }
+
+    AssetHandle AssetManager::LoadAsset(const String& path, const AssetType& assetType, OnAssetLoadedCallback onAssetLoaded)
 	{
         if (!Filesystem::exists(path.c_str())) {
             return {};
@@ -48,23 +60,19 @@ namespace harmony
 
     void AssetManager::UnloadAsset(const AssetHandle& handle)
     {
+        // Asset is not loaded
         if (pLoadedAssets.find(handle) == pLoadedAssets.end()) {
             return;
         }
 
-        switch (handle.mType) {
-        case AssetType::Model:
-            pPendingUnloadCallbacks.emplace(handle, nullptr);
-            break;
-        case AssetType::Texture:
-            pPendingUnloadCallbacks.emplace(handle, nullptr);
-            break;
-        case AssetType::Shader:
-            pPendingUnloadCallbacks.emplace(handle, nullptr);
-            break;
-        default:
-            break;
+        // make sure we have a provided function to unload the asset
+        if (pAssetTypeLoadFuncs.find(handle.mType) == pAssetTypeLoadFuncs.end())
+        {
+            return;
         }
+
+        // Enqueue unload
+        pPendingUnloadCallbacks.emplace(handle, pAssetTypeLoadFuncs[handle.mType].second);
     }
 
     Asset* AssetManager::GetAsset(const AssetHandle& handle)
@@ -245,43 +253,15 @@ namespace harmony
         }
     }
 
-    AssetLoadResult LoadModel(const String& path)
-    {
-        return {};
-    }
-
-    AssetLoadResult LoadTexture(const String& path)
-    {
-        return {};
-    }
-
-    AssetLoadResult LoadShader(const String& path)
-    {
-        return {};
-    }
-
     void AssetManager::DispatchAssetLoadTask(const AssetHandle& handle, AssetLoadInfo& info)
     {
-        switch (info.mType) {
-        case AssetType::Model:
-            pPendingLoadTasks.emplace(
-                handle, stl::move(std::async(std::launch::async,
-                    LoadModel, info.mPath)));
-            break;
-        case AssetType::Texture:
-            pPendingLoadTasks.emplace(
-                handle, stl::move(std::async(std::launch::async,
-                    LoadTexture, info.mPath)));
-            break;
-        case AssetType::Shader:
-            pPendingLoadTasks.emplace(
-                handle, std::move(std::async(std::launch::async,
-                    LoadShader, info.mPath)));
-            break;
-        default:
-            HNY_ASSERT_NOT_REACHED();
-            break;
+        if (pAssetTypeLoadFuncs.find(handle.mType) == pAssetTypeLoadFuncs.end())
+        {
+            return;
         }
+        pPendingLoadTasks.emplace(
+            handle, stl::move(std::async(std::launch::async,
+                pAssetTypeLoadFuncs[handle.mType].first, info.mPath)));
     }
 
     void AssetManager::TransitionAssetToLoaded(const AssetHandle& handle, Asset* asset_to_transition)
@@ -300,5 +280,4 @@ namespace harmony
 
         pOnAssetLoadedCallbacks.erase(handle);
     }
-    
 }

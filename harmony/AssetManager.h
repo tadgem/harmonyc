@@ -7,9 +7,8 @@
 namespace harmony
 {
 	using AssetIntermediateCallback		= void (*)(AssetIntermediate*);
-	using AssetLoadedCallback	= void (*)(Asset*);
-	using AssetUnloadCallback	= void (*)(Asset*);
-	
+	using OnAssetLoadedCallback	= void (*)(Asset*);
+	using OnAssetUnloadedCallback	= void (*)(Asset*);
 	enum class AssetLoadProgress { NotLoaded, Loading, Loaded, Unloading };
 
 	struct AssetLoadInfo {
@@ -42,14 +41,19 @@ namespace harmony
 
 	};
 
+	using LoadAssetCallback = AssetLoadResult(*)(const String& path);
+	using UnloadAssetCallback = void(*)(Asset* a);
+
 	class AssetManager 
 	{
 		AssetManager();
 
+		bool ProvideAssetTypeLoadFunction(const AssetType& type, LoadAssetCallback onLoad, UnloadAssetCallback onUnload);
+
 		AssetHandle LoadAsset(
 			const String& path,
 			const AssetType& assetType,
-			AssetLoadedCallback onAssetLoaded = nullptr);
+			OnAssetLoadedCallback onAssetLoaded = nullptr);
 
 		void				UnloadAsset(const AssetHandle& handle);
 		Asset*				GetAsset(const AssetHandle& handle);
@@ -68,12 +72,13 @@ namespace harmony
 		
 	protected:
 		friend struct Engine;
-		HashMap<AssetHandle, Future<AssetLoadResult>>	pPendingLoadTasks;
-		HashMap<AssetHandle, Unique<Asset>>				pLoadedAssets;
-		HashMap<AssetHandle, AssetLoadResult>			pPendingSyncLoadCallbacks;
-		HashMap<AssetHandle, AssetUnloadCallback>		pPendingUnloadCallbacks;
-		HashMap<AssetHandle, AssetLoadedCallback>		pOnAssetLoadedCallbacks;
-		Vector<AssetLoadInfo>							pQueuedLoads;
+		HashMap<AssetType, Pair<LoadAssetCallback, UnloadAssetCallback>>	pAssetTypeLoadFuncs;
+		HashMap<AssetHandle, Future<AssetLoadResult>>						pPendingLoadTasks;
+		HashMap<AssetHandle, Unique<Asset>>									pLoadedAssets;
+		HashMap<AssetHandle, AssetLoadResult>								pPendingSyncLoadCallbacks;
+		HashMap<AssetHandle, OnAssetUnloadedCallback>						pPendingUnloadCallbacks;
+		HashMap<AssetHandle, OnAssetLoadedCallback>							pOnAssetLoadedCallbacks;
+		Vector<AssetLoadInfo>												pQueuedLoads;
 		
 		static constexpr uint16 pCallbackTasksPerUpdate = 1;
 		static constexpr uint16 pMaxAsyncTasksInFlight  = 8;
