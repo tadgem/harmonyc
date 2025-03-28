@@ -20,6 +20,12 @@ namespace harmony
 			return mPath == o.mPath && mType== o.mType;
 		}
 
+		void operator=(const AssetLoadInfo& o)
+		{
+			mPath = o.mPath;
+			mType = o.mType;
+		}
+
 		bool operator<(const AssetLoadInfo& o) const {
 			return mPath.size() < o.mPath.size();
 		}

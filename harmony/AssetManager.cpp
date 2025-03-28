@@ -140,7 +140,9 @@ namespace harmony
 
     void AssetManager::Shutdown()
     {
-        HNY_ASSERT_NOT_REACHED();
+        WaitAllAssets();
+        WaitAllUnloads();
+        UnloadAllAssets();
     }
 
     void AssetManager::HandleCallbacks()
@@ -150,7 +152,11 @@ namespace harmony
 
     void AssetManager::HandlePendingLoads()
     {
-        HNY_ASSERT_NOT_REACHED();
+        while (pPendingLoadTasks.size() <= pMaxAsyncTasksInFlight && !pQueuedLoads.empty()) {
+            auto& info = pQueuedLoads.front();
+            DispatchAssetLoadTask(info.ToHandle(), info);
+            pQueuedLoads.erase(pQueuedLoads.begin());
+        }
     }
 
     void AssetManager::HandleAsyncTasks()

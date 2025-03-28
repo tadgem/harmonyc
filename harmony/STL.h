@@ -2,6 +2,7 @@
 
 #include "Memory.h"
 #include "EASTL/string.h"
+#include "EASTL/vector.h"
 #include "EASTL/unique_ptr.h"
 #include "EASTL/algorithm.h"
 #include "EASTL/unordered_map.h"
@@ -16,7 +17,6 @@ namespace harmony
 
 	template <typename T> 
 	using Vector = eastl::vector<T, mimalloc_allocator>;
-
 	
 	template<typename _Ty>
 	using Unique = eastl::unique_ptr<_Ty, mimalloc_default_delete<_Ty>>;

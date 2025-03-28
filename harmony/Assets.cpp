@@ -3,7 +3,7 @@
 namespace harmony
 {
 	SerializableAssetHandle::SerializableAssetHandle(const String& p, const AssetType& type)
-		: mPath(p)
+		: mPath(p), mHandle(p, type)
 	{
 
 	}
