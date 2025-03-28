@@ -31,7 +31,7 @@ namespace harmony
 		mimalloc_allocator(const mimalloc_allocator& x) {}
 		mimalloc_allocator(const mimalloc_allocator& x, const char* pName) {}
 
-		mimalloc_allocator& operator=(const mimalloc_allocator& x) {}
+		mimalloc_allocator& operator=(const mimalloc_allocator& x) { return *this; }
 
 		void* allocate(size_t n, int flags = 0) {
 			return mi_malloc(n);

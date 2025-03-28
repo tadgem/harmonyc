@@ -49,7 +49,7 @@ namespace harmony
 		AssetHandle LoadAsset(
 			const String& path,
 			const AssetType& assetType,
-			AssetIntermediateCallback onAssetLoaded = nullptr);
+			AssetLoadedCallback onAssetLoaded = nullptr);
 
 		void				UnloadAsset(const AssetHandle& handle);
 		Asset*				GetAsset(const AssetHandle& handle);
@@ -72,7 +72,7 @@ namespace harmony
 		HashMap<AssetHandle, Unique<Asset>>				pLoadedAssets;
 		HashMap<AssetHandle, AssetLoadResult>			pPendingSyncLoadCallbacks;
 		HashMap<AssetHandle, AssetUnloadCallback>		pPendingUnloadCallbacks;
-		HashMap<AssetHandle, AssetIntermediateCallback>	pOnAssetLoadedCallbacks;
+		HashMap<AssetHandle, AssetLoadedCallback>		pOnAssetLoadedCallbacks;
 		Vector<AssetLoadInfo>							pQueuedLoads;
 		
 		static constexpr uint16 pCallbackTasksPerUpdate = 1;
