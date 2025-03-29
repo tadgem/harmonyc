@@ -7,10 +7,10 @@
 namespace harmony {
 class Engine {
 public:
-  lvk::VkState mVK;
-  Memory mMemory;
+  Memory            mMemory;
+  lvk::VkState      mVK;
   lvk::LvkIm3dState mIm3D;
-  bool mEnableMSAA = false;
+  bool              mEnableMSAA = false;
 
   static Engine Init(uint32 swapchainWidth = 1920,
                      uint32 swapchainHeight = 1080, bool enableMSAA = false,
