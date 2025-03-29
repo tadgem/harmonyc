@@ -1,103 +1,98 @@
 #pragma once
-#include "Primitives.h"
 #include "Assets.h"
+#include "Primitives.h"
 
+namespace harmony {
+using AssetIntermediateCallback = void (*)(AssetIntermediate *);
+using OnAssetLoadedCallback = void (*)(Asset *);
+using OnAssetUnloadedCallback = void (*)(Asset *);
+enum class AssetLoadProgress { NotLoaded, Loading, Loaded, Unloading };
 
+struct AssetLoadInfo {
+  String mPath;
+  AssetType mType;
 
-namespace harmony
-{
-	using AssetIntermediateCallback		= void (*)(AssetIntermediate*);
-	using OnAssetLoadedCallback	= void (*)(Asset*);
-	using OnAssetUnloadedCallback	= void (*)(Asset*);
-	enum class AssetLoadProgress { NotLoaded, Loading, Loaded, Unloading };
+  bool operator==(const AssetLoadInfo &o) const {
+    return mPath == o.mPath && mType == o.mType;
+  }
 
-	struct AssetLoadInfo {
-		String		mPath;
-		AssetType	mType;
+  void operator=(const AssetLoadInfo &o) {
+    mPath = o.mPath;
+    mType = o.mType;
+  }
 
-		bool operator==(const AssetLoadInfo& o) const {
-			return mPath == o.mPath && mType== o.mType;
-		}
+  bool operator<(const AssetLoadInfo &o) const {
+    return mPath.size() < o.mPath.size();
+  }
 
-		void operator=(const AssetLoadInfo& o)
-		{
-			mPath = o.mPath;
-			mType = o.mType;
-		}
+  AssetHandle ToHandle();
+};
 
-		bool operator<(const AssetLoadInfo& o) const {
-			return mPath.size() < o.mPath.size();
-		}
+struct AssetLoadResult {
+  AssetIntermediate *mLoadedAssetIntermediate = nullptr;
+  // additional assets that may be required to completely load this asset
+  Vector<AssetLoadInfo> mNewAssetsToLoad;
+  // synchronous tasks associated with this asset e.g. submit texture mem to GPU
+  // in openGL
+  Vector<AssetIntermediateCallback> mSynchronousAssetCallbacks;
+};
 
-		AssetHandle ToHandle();
-	};
+using LoadAssetCallback = AssetLoadResult (*)(const String &path);
+using UnloadAssetCallback = void (*)(Asset *a);
 
-	struct AssetLoadResult {
-		AssetIntermediate*					mLoadedAssetIntermediate = nullptr;
-		// additional assets that may be required to completely load this asset
-		Vector<AssetLoadInfo>				mNewAssetsToLoad;
-		// synchronous tasks associated with this asset e.g. submit texture mem to GPU in openGL
-		Vector<AssetIntermediateCallback>	mSynchronousAssetCallbacks;
+class AssetManager {
+  AssetManager();
 
-	};
+  bool ProvideAssetTypeLoadFunction(const AssetType &type,
+                                    LoadAssetCallback onLoad,
+                                    UnloadAssetCallback onUnload);
 
-	using LoadAssetCallback = AssetLoadResult(*)(const String& path);
-	using UnloadAssetCallback = void(*)(Asset* a);
+  AssetHandle LoadAsset(const String &path, const AssetType &assetType,
+                        OnAssetLoadedCallback onAssetLoaded = nullptr);
 
-	class AssetManager 
-	{
-		AssetManager();
+  void UnloadAsset(const AssetHandle &handle);
+  Asset *GetAsset(const AssetHandle &handle);
+  AssetLoadProgress GetAssetLoadProgress(const AssetHandle &handle);
 
-		bool ProvideAssetTypeLoadFunction(const AssetType& type, LoadAssetCallback onLoad, UnloadAssetCallback onUnload);
+  bool AnyAssetsLoading();
+  bool AnyAssetsUnloading();
 
-		AssetHandle LoadAsset(
-			const String& path,
-			const AssetType& assetType,
-			OnAssetLoadedCallback onAssetLoaded = nullptr);
+  /// <summary>
+  /// Synchronous calls that will wait until
+  /// all pending asset manager loads /unloads are finished
+  /// </summary>
+  void WaitAllAssets();
+  void WaitAllUnloads();
+  void UnloadAllAssets();
 
-		void				UnloadAsset(const AssetHandle& handle);
-		Asset*				GetAsset(const AssetHandle& handle);
-		AssetLoadProgress	GetAssetLoadProgress(const AssetHandle& handle);
+protected:
+  friend struct Engine;
+  HashMap<AssetType, Pair<LoadAssetCallback, UnloadAssetCallback>>
+      pAssetTypeLoadFuncs;
+  HashMap<AssetHandle, Future<AssetLoadResult>> pPendingLoadTasks;
+  HashMap<AssetHandle, Unique<Asset>> pLoadedAssets;
+  HashMap<AssetHandle, AssetLoadResult> pPendingSyncLoadCallbacks;
+  HashMap<AssetHandle, OnAssetUnloadedCallback> pPendingUnloadCallbacks;
+  HashMap<AssetHandle, OnAssetLoadedCallback> pOnAssetLoadedCallbacks;
+  Vector<AssetLoadInfo> pQueuedLoads;
 
-		bool				AnyAssetsLoading();
-		bool				AnyAssetsUnloading();
+  static constexpr uint16 pCallbackTasksPerUpdate = 1;
+  static constexpr uint16 pMaxAsyncTasksInFlight = 8;
 
-		/// <summary>
-		/// Synchronous calls that will wait until
-		/// all pending asset manager loads /unloads are finished
-		/// </summary>
-		void WaitAllAssets();
-		void WaitAllUnloads();
-		void UnloadAllAssets();
-		
-	protected:
-		friend struct Engine;
-		HashMap<AssetType, Pair<LoadAssetCallback, UnloadAssetCallback>>	pAssetTypeLoadFuncs;
-		HashMap<AssetHandle, Future<AssetLoadResult>>						pPendingLoadTasks;
-		HashMap<AssetHandle, Unique<Asset>>									pLoadedAssets;
-		HashMap<AssetHandle, AssetLoadResult>								pPendingSyncLoadCallbacks;
-		HashMap<AssetHandle, OnAssetUnloadedCallback>						pPendingUnloadCallbacks;
-		HashMap<AssetHandle, OnAssetLoadedCallback>							pOnAssetLoadedCallbacks;
-		Vector<AssetLoadInfo>												pQueuedLoads;
-		
-		static constexpr uint16 pCallbackTasksPerUpdate = 1;
-		static constexpr uint16 pMaxAsyncTasksInFlight  = 8;
-		
-		void Update();
+  void Update();
 
-		void Shutdown();
+  void Shutdown();
 
-		void HandleCallbacks();
+  void HandleCallbacks();
 
-		void HandlePendingLoads();
+  void HandlePendingLoads();
 
-		void HandleAsyncTasks();
+  void HandleAsyncTasks();
 
-		void DispatchAssetLoadTask(const AssetHandle& handle, AssetLoadInfo& info);
+  void DispatchAssetLoadTask(const AssetHandle &handle, AssetLoadInfo &info);
 
-	private:
-		void TransitionAssetToLoaded(const AssetHandle& handle,
-			Asset* asset_to_transition);
-
-	};
-}
+private:
+  void TransitionAssetToLoaded(const AssetHandle &handle,
+                               Asset *asset_to_transition);
+};
+} // namespace harmony
