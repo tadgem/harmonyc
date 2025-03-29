@@ -7,6 +7,11 @@
 #include "EASTL/unordered_map.h"
 #include "EASTL/string.h"
 
+
+#define FLECS_USE_OS_ALLOC
+#include "flecs.h"
+#include "flecs/addons/cpp/flecs.hpp"
+
 #include "lvk/lvk.h"
 
 #include "Assets.h"
@@ -16,10 +21,6 @@
 #include "Memory.h"
 #include "STL.h"
 #include "VkTech.h"
-
-#define FLECS_USE_OS_ALLOC
-#include "flecs.h"
-#include "flecs/addons/cpp/flecs.hpp"
 #include "harmony_unity.cpp"
 
 namespace harmony {

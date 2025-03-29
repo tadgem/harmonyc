@@ -9,9 +9,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 add_subdirectory(submodules/lvk)
 add_subdirectory(submodules/flecs)
 
-add_executable(harmonyc harmony/Entry.cpp)
-add_executable(harmonyc_tests tests/harmony_tests.cpp)
-
 set(harmonyc_libs lvk lvk-sdl flecs_static)
 set(harmonyc_definitions "EASTL_EABASE_DISABLED")
 set(harmonyc_includes
@@ -27,11 +24,12 @@ set(harmonyc_includes
   ${LVK_SDL_INCLUDES}
 )
 
+function(add_harmony_exe exe_name entry_file)
+	add_executable(${exe_name} ${entry_file})
+	target_compile_definitions(${exe_name} PRIVATE ${harmonyc_definitions} )
+	target_link_libraries(${exe_name} ${harmonyc_libs})
+	target_include_directories(${exe_name} PRIVATE ${harmonyc_includes})
+endfunction()
 
-target_compile_definitions(harmonyc PRIVATE ${harmonyc_definitions})
-target_link_libraries(harmonyc ${harmonyc_libs})
-target_include_directories(harmonyc PRIVATE ${harmonyc_includes})
-
-target_compile_definitions(harmonyc_tests PRIVATE ${harmonyc_definitions})
-target_link_libraries(harmonyc_tests ${harmonyc_libs})
-target_include_directories(harmonyc_tests PRIVATE ${harmonyc_includes} ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+add_harmony_exe(harmonyc harmony/entry.cpp)
+add_harmony_exe(harmonyc_tests tests/core_tests.cpp)
