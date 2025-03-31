@@ -18,8 +18,17 @@
 #define HNY_ASSERT_NOT_REACHED() HNY_ASSERT(false, "Should not be reached")
 
 #include "SDL3/SDL_log.h"
-#define HNY_LOG_INFO(msg,...)	SDL_LogInfo(0,BLUE_PRINT_CODE "[harmony][info] " NORMAL_PRINT_CODE msg, __VA_ARGS__);
-#define HNY_LOG_WARN(msg,...)	SDL_LogWarn(0,YELLOW_PRINT_CODE "[harmony][warn] " NORMAL_PRINT_CODE msg, __VA_ARGS__);
-#define HNY_LOG_ERROR(msg,...)	SDL_LogError(0,RED_PRINT_CODE "[harmony][error] " NORMAL_PRINT_CODE msg, __VA_ARGS__);
-#define HNY_LOG_DEBUG(msg,...)	SDL_LogDebug(0,MAGENTA_PRINT_CODE "[harmony][debug] " NORMAL_PRINT_CODE msg, __VA_ARGS__);
-#define HNY_LOG_TRACE(msg,...)	SDL_LogTrace(0,CYAN_PRINT_CODE "[harmony][trace] " NORMAL_PRINT_CODE msg, __VA_ARGS__);
+#define LOGGING_ENABLED
+#ifdef	LOGGING_ENABLED
+#define HNY_LOG_INFO(msg,...)	SDL_LogInfo(0,BLUE_PRINT_CODE "[harmony][info] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
+#define HNY_LOG_WARN(msg,...)	SDL_LogWarn(0,YELLOW_PRINT_CODE "[harmony][warn] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
+#define HNY_LOG_ERROR(msg,...)	SDL_LogError(0,RED_PRINT_CODE "[harmony][error] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
+#define HNY_LOG_DEBUG(msg,...)	SDL_LogDebug(0,MAGENTA_PRINT_CODE "[harmony][debug] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
+#define HNY_LOG_TRACE(msg,...)	SDL_LogTrace(0,CYAN_PRINT_CODE "[harmony][trace] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
+#else
+#define HNY_LOG_INFO(msg,...)
+#define HNY_LOG_WARN(msg,...)
+#define HNY_LOG_ERROR(msg,...)
+#define HNY_LOG_DEBUG(msg,...)
+#define HNY_LOG_TRACE(msg,...)
+#endif
