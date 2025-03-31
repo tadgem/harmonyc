@@ -69,9 +69,7 @@ HNY_LOG_INFO("%s Tests\n", suite_name);
     if(result.mResult != harmony::TestResultEnum::Pass) { HNY_LOG_INFO("    Test Message : %s\n", result.mResultMessage.c_str());}\
 }};
 
-#define ADD_TEST(test_name) sResults[#test_name] = test_name();
-
-#define ADD_TEST2(TEST_NAME) harmony::Timer timer_##TEST_NAME;\
+#define ADD_TEST(TEST_NAME) harmony::Timer timer_##TEST_NAME;\
 auto result_##TEST_NAME = TEST_NAME();\
 f64 time_taken_##TEST_NAME = timer_##TEST_NAME.ElapsedMillisecondsF();\
 result_##TEST_NAME.mElapsedMs = time_taken_##TEST_NAME;\
