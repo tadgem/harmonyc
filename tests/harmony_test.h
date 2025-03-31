@@ -20,21 +20,25 @@
 #include "Macros.h"
 #include "Memory.h"
 #include "STL.h"
+#include "Timer.h"
 #include "VkTech.h"
 #include "harmony_unity.cpp"
 
 namespace harmony {
 enum class TestResultEnum { Fail = -1, Pass = 0, DNF = 1 };
 struct TestResult {
-  TestResultEnum mResult;
-  harmony::String mResultMessage;
+  TestResultEnum    mResult;
+  harmony::String   mResultMessage;
+  f64               mElapsedMs;
+
+  static TestResult Pass() { return { TestResultEnum::Pass, {}, 0.0 }; };
 };
 } // namespace harmony
 
 #define TEST_ASSERT(cond, message, ...)                                        \
   if (!(cond)) {                                                               \
     HNY_LOG_ERROR(message, __VA_ARGS__);                                       \
-    return harmony::TestResultEnum::Fail;                                      \
+    return TestResult { harmony::TestResultEnum::Fail, ##message, 0.0};         \
   }                                                                            \
   
 #define HARMONY_OVERRIDE_GLOBAL_NEW_TESTS(ENABLE_PRINT)                        \
@@ -56,15 +60,19 @@ struct TestResult {
 #define TEST_APP_BEGIN(suite_name) \
 HARMONY_OVERRIDE_GLOBAL_NEW_TESTS(false)\
 int main() {\
-eastl::unordered_map<eastl::string, harmony::TestResultEnum> sResults{};\
+eastl::unordered_map<eastl::string, harmony::TestResult> sResults{};\
 eastl::string sCurrentTestName = "";\
 HNY_LOG_INFO("%s Tests\n", suite_name);
 
 #define TEST_APP_END() for(auto [name, result] : sResults) {\
-    HNY_LOG_INFO("Test %s, Result : %s \n", name.c_str(), result == harmony::TestResultEnum::Fail ? "Fail" : "Pass");\
+    HNY_LOG_INFO("Test %s, Result : %s, Time Taken : %f ms\n", name.c_str(), result.mResult == harmony::TestResultEnum::Fail ? "Fail" : "Pass", result.mElapsedMs);\
+    if(result.mResult != harmony::TestResultEnum::Pass) { HNY_LOG_INFO("    Test Message : %s\n", result.mResultMessage.c_str());}\
 }};
-
-using TestFunction = harmony::TestResultEnum (*)(harmony::Engine* engine);
 
 #define ADD_TEST(test_name) sResults[#test_name] = test_name();
 
+#define ADD_TEST2(TEST_NAME) harmony::Timer timer_##TEST_NAME;\
+auto result_##TEST_NAME = TEST_NAME();\
+f64 time_taken_##TEST_NAME = timer_##TEST_NAME.ElapsedMillisecondsF();\
+result_##TEST_NAME.mElapsedMs = time_taken_##TEST_NAME;\
+sResults[#TEST_NAME] = result_##TEST_NAME;

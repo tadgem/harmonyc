@@ -40,6 +40,8 @@ Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA, uint64 upfrontMemory) {
   SDL_SetMemoryFunctions(mi_malloc, mi_calloc, mi_realloc, mi_free);
   InitFlecsCustomAllocator();
 
+  HNY_LOG_INFO("Allocated Engine Memory : %llu MB", upfrontMemory / (MEGABYTES(1)));
+
   lvk::VkState vk = lvk::init::Create<lvk::VkSDL>("Harmony Engine", w, h, enableMSAA);
   lvk::LvkIm3dState im3d = lvk::LoadIm3D(vk);
 

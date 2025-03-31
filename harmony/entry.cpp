@@ -10,6 +10,7 @@
 #include "Json.h"
 #include "Macros.h"
 #include "Memory.h"
+#include "Timer.h"
 #include "STL.h"
 #include "VkTech.h"
 
@@ -35,6 +36,7 @@ int main() {
   AssetHandle sh{};
   String someString = "Hello";
   SerializableAssetHandle handle(someString, AssetType::Audio);
+  Timer t;
 
   printf("Handle Str : %s\n", handle.mPath.c_str());
   {
@@ -53,6 +55,9 @@ int main() {
   Json someJson;
   someJson["dad"] = 3;
   int64 val = someJson["dad"];
+
+  auto ms = t.ElapsedMillisecondsF();
+  auto ns = t.ElapsedNanosecondsF();
 
   while (engine.ShouldRun()) {
     engine.PreFrame();
