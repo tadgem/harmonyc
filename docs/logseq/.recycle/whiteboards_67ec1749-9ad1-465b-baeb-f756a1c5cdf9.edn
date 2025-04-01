@@ -1,0 +1,38 @@
+{:blocks (
+{:block/properties 
+{:ls-type :whiteboard-shape
+:logseq.tldraw.shape 
+{:stroke ""
+:index 0
+:scale [1 1]
+:scaleLevel "md"
+:fill ""
+:type "pencil"
+:points [[0 0 0.5]]
+:strokeType "line"
+:strokeWidth 2
+:opacity 1
+:id "40fdec20-0f18-11f0-b25f-77346b31555e"
+:noFill true
+:point [2710.7151097245824 -121.40042521387306]
+:parentId "67ec1749-9ad1-465b-baeb-f756a1c5cdf9"
+:nonce 1743525729252
+:isComplete true}}
+:block/updated-at 1743525729548})
+:pages (
+{:block/uuid #uuid "67ec1749-9ad1-465b-baeb-f756a1c5cdf9"
+:block/properties 
+{:ls-type :whiteboard-page
+:logseq.tldraw.page 
+{:id "67ec1749-9ad1-465b-baeb-f756a1c5cdf9"
+:name "67ec1749-9ad1-465b-baeb-f756a1c5cdf9"
+:bindings 
+{}
+:nonce 1
+:assets []
+:shapes-index ("40fdec20-0f18-11f0-b25f-77346b31555e")}}
+:block/updated-at 1743525729548
+:block/created-at 1743525705416
+:block/type "whiteboard"
+:block/name "67ec1749-9ad1-465b-baeb-f756a1c5cdf9"
+:block/original-name "67ec1749-9ad1-465b-baeb-f756a1c5cdf9"})}
