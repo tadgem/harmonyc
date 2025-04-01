@@ -19,5 +19,10 @@ public:
   bool ShouldRun();
   void PreFrame();
   void EndFrame();
+  void Shutdown();
+
+  ~Engine() { 
+      Shutdown(); 
+  }
 };
 } // namespace harmony

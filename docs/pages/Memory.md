@@ -1,0 +1,7 @@
+- [[Harmony Engine]] allocates (using std::malloc) an upfront chunk of memory (referred to as Global Memory Space, by default 4GB is allocated) which is then provided to mimalloc which uses an arena allocator within the Global Memory Space.
+- Plan is for heap-allocating types to use a variant of the default mimalloc_allocator to identify types and bucket them in to sub-regions of the Global Memory Space for better data locality and easier identification when the game is using too much memory, given the initial budget. This will also make poorly shaped / aligned data structures easier to spot as the memory in the bucket will dwindle faster than well structured types.
+- For engine dependencies, we only use libraries that have good support for custom allocation, and allow us to pass our own functions in for all memory allocations. Right now we have custom integration with:
+	- SDL
+	- FLECS
+	- nlohmann::json
+-

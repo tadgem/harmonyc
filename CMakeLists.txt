@@ -33,3 +33,9 @@ endfunction()
 
 add_harmony_exe(harmonyc harmony/entry.cpp)
 add_harmony_exe(harmonyc_tests tests/core_tests.cpp)
+
+add_custom_command(
+        TARGET harmonyc_tests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_CURRENT_SOURCE_DIR}/tests/test.bin
+                ${CMAKE_CURRENT_BINARY_DIR}/test.bin)

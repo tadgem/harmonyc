@@ -1,6 +1,7 @@
 #pragma once
 #include "EASTL/allocator.h"
 #include "Primitives.h"
+#include "Macros.h"
 #include "mimalloc.h"
 
 /// <summary>
@@ -13,6 +14,7 @@
                                unsigned debugFlags, const char *file,          \
                                int line) {                                     \
     ENABLE_PRINT ? printf("Unassigned Allocation!\n") : 0;                     \
+    HNY_ASSERT_NOT_REACHED();                                                  \
     return mi_malloc(size);                                                    \
   }                                                                            \
                                                                                \
@@ -20,8 +22,12 @@
                                unsigned __int64, char const *, int,            \
                                unsigned int, char const *, int) {              \
     ENABLE_PRINT ? printf("Unassigned Allocation!\n") : 0;                     \
+    HNY_ASSERT_NOT_REACHED();                                                  \
     return mi_malloc(size);                                                    \
   }
+
+#define HNY_NEW(Type, ...) new(mi_malloc(sizeof(Type))) Type(__VA_ARGS__)
+#define HNY_DELETE(Obj) mi_free(Obj)
 
 namespace harmony {
 class mimalloc_allocator {
@@ -86,7 +92,14 @@ struct Memory {
   void *mMemory;
   mi_arena_id_t mArenaId;
   mi_heap_t *mHeap;
-  mimalloc_allocator mDefaultAllocator;
+  mi_heap_t* mPreviousHeap;
+
+  void Free()
+  {
+      //mi_heap_set_default(mPreviousHeap);
+      mi_heap_delete(mHeap);
+      std::free(mMemory);
+  }
 
   static Memory Create(uint64 upfrontMemory) {
     void *memory = std::malloc(upfrontMemory);
@@ -101,11 +114,11 @@ struct Memory {
     mi_manage_os_memory_ex(memory, upfrontMemory, is_committed, is_large,
                            is_zeroed, numa_mode, is_exclusive, &arenaId);
 
-    mi_heap_t *engineHeap = mi_heap_new_in_arena(arenaId);
+    mi_heap_t* engineHeap = mi_heap_new_in_arena(arenaId);
+    mi_heap_t* previousHeap = mi_heap_get_default();
     mi_heap_set_default(engineHeap);
 
-    return Memory{upfrontMemory, memory, arenaId, engineHeap,
-                  mimalloc_allocator()};
+    return Memory{upfrontMemory, memory, arenaId, engineHeap, previousHeap};
   }
 };
 } // namespace harmony

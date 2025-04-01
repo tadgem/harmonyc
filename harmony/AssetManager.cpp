@@ -179,7 +179,7 @@ void AssetManager::HandleCallbacks() {
     TransitionAssetToLoaded(
         handle,
         pPendingSyncLoadCallbacks[handle].mLoadedAssetIntermediate->mAssetData);
-    delete pPendingSyncLoadCallbacks[handle].mLoadedAssetIntermediate;
+    HNY_DELETE(pPendingSyncLoadCallbacks[handle].mLoadedAssetIntermediate);
     pPendingSyncLoadCallbacks.erase(handle);
   }
   clears.clear();
@@ -224,10 +224,11 @@ void AssetManager::HandleAsyncTasks() {
     }
 
     if (asyncReturn.mSynchronousAssetCallbacks.empty() &&
-        asyncReturn.mLoadedAssetIntermediate == nullptr) {
+        asyncReturn.mLoadedAssetIntermediate != nullptr) {
       TransitionAssetToLoaded(handle,
                               asyncReturn.mLoadedAssetIntermediate->mAssetData);
-      delete asyncReturn.mLoadedAssetIntermediate;
+      
+      HNY_DELETE(asyncReturn.mLoadedAssetIntermediate);
       asyncReturn.mLoadedAssetIntermediate = nullptr;
     } else {
       pPendingSyncLoadCallbacks.emplace(handle, asyncReturn);

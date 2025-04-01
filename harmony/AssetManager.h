@@ -41,7 +41,8 @@ using LoadAssetCallback = AssetLoadResult (*)(const String &path);
 using UnloadAssetCallback = void (*)(Asset *a);
 
 class AssetManager {
-  AssetManager();
+public:
+  AssetManager() = default;
 
   bool ProvideAssetTypeLoadFunction(const AssetType &type,
                                     LoadAssetCallback onLoad,
@@ -65,6 +66,10 @@ class AssetManager {
   void WaitAllUnloads();
   void UnloadAllAssets();
 
+
+  void Update();
+  void Shutdown();
+
 protected:
   friend struct Engine;
   HashMap<AssetType, Pair<LoadAssetCallback, UnloadAssetCallback>>
@@ -79,9 +84,6 @@ protected:
   static constexpr uint16 pCallbackTasksPerUpdate = 1;
   static constexpr uint16 pMaxAsyncTasksInFlight = 8;
 
-  void Update();
-
-  void Shutdown();
 
   void HandleCallbacks();
 

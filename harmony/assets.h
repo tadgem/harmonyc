@@ -55,10 +55,10 @@ public:
 
 template <typename _Ty, AssetType _AssetTypeEnum> class AssetT : public Asset {
 public:
-  Unique<_Ty> mData;
+  _Ty   mData;
 
-  AssetT(const String &path, Unique<_Ty> &data)
-      : Asset(path, _AssetTypeEnum), mData(eastl::move(data)) {};
+  AssetT(const String &path, const _Ty &data)
+      : Asset(path, _AssetTypeEnum), mData(data) {};
 
   ~AssetT() {};
 };

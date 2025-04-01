@@ -33,6 +33,20 @@ void InitFlecsCustomAllocator() {
   ecs_os_set_api(&api);
 }
 
+class mimalloc_allocator_lvk : public lvk::IAllocator
+{
+public:
+	// Inherited via IAllocator
+	void* allocate(size_t size) override
+	{
+		return mi_malloc(size);
+	}
+	void deallocate(void* addr) override
+	{
+		return mi_free(addr);
+	}
+};
+
 Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA, uint64 upfrontMemory) {
   Memory mem = Memory::Create(upfrontMemory);
 
@@ -59,5 +73,11 @@ void Engine::PreFrame() {
 void Engine::EndFrame() {
   Im3d::EndFrame();
   mVK.m_Backend->PostFrame(mVK);
+}
+void Engine::Shutdown()
+{
+	lvk::FreeIm3d(mVK, mIm3D);
+	lvk::init::Cleanup(mVK);
+	mMemory.Free();	
 }
 } // namespace harmony
