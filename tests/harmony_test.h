@@ -61,7 +61,7 @@ HNY_LOG_INFO("%s Tests\n", suite_name);                             \
 }};
 
 #define ADD_TEST(TEST_NAME) {\
-harmony::Engine e = harmony::Engine::Init(1280, 720, false, MEGABYTES(512));\
+harmony::Engine e = harmony::Engine::Init(1280, 720, false, MEGABYTES(512), false);\
 harmony::Timer timer_##TEST_NAME;\
 auto result_##TEST_NAME = TEST_NAME(&e);\
 f64 time_taken_##TEST_NAME = timer_##TEST_NAME.ElapsedMillisecondsF();\

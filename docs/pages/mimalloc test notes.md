@@ -1,0 +1,2 @@
+- ![image.png](../assets/image_1743597843203_0.png)
+- We should try: `MIMALLOC_PURGE_DELAY=0` & `MIMALLOC_PURGE_DELAY=-1`.

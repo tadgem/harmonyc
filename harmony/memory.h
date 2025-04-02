@@ -88,37 +88,64 @@ public:
 /// allowing creation of sub allocators for specific use cases
 /// </summary>
 struct Memory {
-  uint64 mAllocatedBytes;
-  void *mMemory;
+  inline static uint64        sAllocatedBytes = 0;
+  inline static void*         sMemory = nullptr;
   mi_arena_id_t mArenaId;
-  mi_heap_t *mHeap;
-  mi_heap_t* mPreviousHeap;
+  mi_heap_t*    mHeap;
+  mi_heap_t*    mPreviousHeap;
 
   void Free()
   {
-      //mi_heap_set_default(mPreviousHeap);
-      mi_heap_delete(mHeap);
-      std::free(mMemory);
+      mi_heap_set_default(mPreviousHeap);
+
+      // TODO: Investigate releasing a heap properly.
+      // mi_heap_delete(mHeap);
+      
+      memset(sMemory, 0, static_cast<size_t>(sAllocatedBytes));
+  }
+
+  static void FreeGlobal()
+  {
+      std::free(sMemory);
+  }
+
+  static void InitGlobal(uint64 upfrontMemory)
+  {
+      if (sMemory == nullptr)
+      {
+          sMemory = std::malloc(upfrontMemory);
+          sAllocatedBytes = upfrontMemory;
+          memset(sMemory, 0, sAllocatedBytes);
+          mi_option_set(mi_option_show_errors, 1);
+          mi_option_set(mi_option_verbose, 1);
+          mi_option_set(mi_option_arena_eager_commit, 1);
+          mi_option_set(mi_option_purge_delay, 0);
+          mi_option_set(mi_option_purge_decommits, 0);
+          mi_option_set(mi_option_allow_large_os_pages, 1);
+      }
   }
 
   static Memory Create(uint64 upfrontMemory) {
-    void *memory = std::malloc(upfrontMemory);
-    mi_option_set(mi_option_show_errors, 1);
-    mi_option_set(mi_option_verbose, 1);
-    mi_arena_id_t arenaId;
-    constexpr bool is_committed = true;
-    constexpr bool is_large = true;
-    constexpr bool is_exclusive = true;
-    constexpr bool is_zeroed = false;
-    constexpr int numa_mode = -1;
-    mi_manage_os_memory_ex(memory, upfrontMemory, is_committed, is_large,
+    
+    if (sMemory == nullptr)
+    {
+        InitGlobal(upfrontMemory);
+    }
+
+    mi_arena_id_t   arenaId;
+    constexpr bool  is_committed = true;
+    constexpr bool  is_large = true;
+    constexpr bool  is_exclusive = true;
+    constexpr bool  is_zeroed = true;
+    constexpr int   numa_mode = -1;
+    mi_manage_os_memory_ex(sMemory, upfrontMemory, is_committed, is_large,
                            is_zeroed, numa_mode, is_exclusive, &arenaId);
 
-    mi_heap_t* engineHeap = mi_heap_new_in_arena(arenaId);
+    mi_heap_t* engineHeap   = mi_heap_new_in_arena(arenaId);
     mi_heap_t* previousHeap = mi_heap_get_default();
     mi_heap_set_default(engineHeap);
 
-    return Memory{upfrontMemory, memory, arenaId, engineHeap, previousHeap};
+    return Memory{arenaId, engineHeap, previousHeap};
   }
 };
 } // namespace harmony

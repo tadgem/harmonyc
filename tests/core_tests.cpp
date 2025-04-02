@@ -3,7 +3,7 @@
 using namespace harmony;
 
 
-TestResult AssetManagerLoadUnloadFunctionsUsed(Engine* e)
+TestResult AssetManagerTest1(Engine* e)
 {
 	AssetManager am;
 	using TestBinaryAsset = AssetT<char, AssetType::Binary>;
@@ -45,46 +45,75 @@ TestResult AssetManagerLoadUnloadFunctionsUsed(Engine* e)
 	return TestResult::Pass();
 }
 
-TestResult SampleTest2(Engine* e)
+TestResult AssetManagerTest2(Engine* e)
 {
-	return TestResult::Pass();
+	return AssetManagerTest1(e);
 }
 
-//void* __cdecl operator new[](size_t size, const char* name, int flags, unsigned debugFlags, const char* file, int line) {
-//	printf("Unassigned Allocation!\n");
-//	return mi_malloc(size);
-//} void* __cdecl operator new[](size_t size, unsigned __int64, unsigned __int64, char const*, int, unsigned int, char const*, int) {
-//	printf("Unassigned Allocation!\n");
-//	return mi_malloc(size);
-//}
-//
-//
-//int main() {
-//	TestHashMap<TestString, harmony::TestResult> sResults{}; 
-//	TestString sCurrentTestName = ""; 
-//	printf("\x1B[34m" "[harmony][info ] " "\x1B[0m" "%s Tests\n", "Core Engine Functionality");
-//
-//	{ 
-//		harmony::Engine e = harmony::Engine::Init(1280, 720, false, 512 * 1024ULL * 1024ULL); 
-//		harmony::Timer timer_AssetManagerLoadUnloadFunctionsUsed; 
-//		auto result_AssetManagerLoadUnloadFunctionsUsed = AssetManagerLoadUnloadFunctionsUsed(&e); 
-//		f64 time_taken_AssetManagerLoadUnloadFunctionsUsed = timer_AssetManagerLoadUnloadFunctionsUsed.ElapsedMillisecondsF(); 
-//		result_AssetManagerLoadUnloadFunctionsUsed.mElapsedMs = time_taken_AssetManagerLoadUnloadFunctionsUsed; 
-//		sResults["AssetManagerLoadUnloadFunctionsUsed"] = result_AssetManagerLoadUnloadFunctionsUsed; 
-//	}
-//
-//	for (auto [name, result] : sResults) {
-//		printf("\x1B[34m" "[harmony][info ] " "\x1B[0m" "Test %s, Result : %s, Time Taken : %f ms\n", name.c_str(), result.mResult == harmony::TestResultEnum::Fail ? "Fail" : "Pass", result.mElapsedMs); if (result.mResult != harmony::TestResultEnum::Pass) {
-//			printf("\x1B[34m" "[harmony][info ] " "\x1B[0m" "    Test Message : %s\n", result.mResultMessage.c_str());
-//		}
-//	}
-//};
+TestResult AssetManagerTest3(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest4(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest5(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest6(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest7(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest8(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest9(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest10(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest11(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest12(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest13(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
+TestResult AssetManagerTest14(Engine* e)
+{
+	return AssetManagerTest1(e);
+}
 
 TEST_APP_BEGIN_SUITE("Core Engine Functionality")
 
-{
-	harmony::Engine e = harmony::Engine::Init(1280, 720, false, 512 * 1024ULL * 1024ULL); harmony::Timer timer_AssetManagerLoadUnloadFunctionsUsed; auto result_AssetManagerLoadUnloadFunctionsUsed = AssetManagerLoadUnloadFunctionsUsed(&e); f64 time_taken_AssetManagerLoadUnloadFunctionsUsed = timer_AssetManagerLoadUnloadFunctionsUsed.ElapsedMillisecondsF(); result_AssetManagerLoadUnloadFunctionsUsed.mElapsedMs = time_taken_AssetManagerLoadUnloadFunctionsUsed; sResults["AssetManagerLoadUnloadFunctionsUsed"] = result_AssetManagerLoadUnloadFunctionsUsed;
-};
-ADD_TEST(SampleTest2)
+ADD_TEST(AssetManagerTest1)
+ADD_TEST(AssetManagerTest2)
+ADD_TEST(AssetManagerTest3)
+ADD_TEST(AssetManagerTest4)
+ADD_TEST(AssetManagerTest5)
+ADD_TEST(AssetManagerTest6)
+ADD_TEST(AssetManagerTest7)
+ADD_TEST(AssetManagerTest8)
+ADD_TEST(AssetManagerTest9)
+ADD_TEST(AssetManagerTest10)
+ADD_TEST(AssetManagerTest11)
+ADD_TEST(AssetManagerTest12)
+ADD_TEST(AssetManagerTest13)
+ADD_TEST(AssetManagerTest14)
 
 TEST_APP_END_SUITE()

@@ -47,37 +47,41 @@ public:
 	}
 };
 
-Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA, uint64 upfrontMemory) {
+Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA, uint64 upfrontMemory, bool enableValidation) {
   Memory mem = Memory::Create(upfrontMemory);
 
   // pass mimalloc functions so SDL uses the same memory space.
   SDL_SetMemoryFunctions(mi_malloc, mi_calloc, mi_realloc, mi_free);
   InitFlecsCustomAllocator();
 
-  HNY_LOG_INFO("Allocated Engine Memory : %llu MB", upfrontMemory / (MEGABYTES(1)));
+  HNY_LOG_INFO("Allocated Engine Memory : %llu MB\n", upfrontMemory / (MEGABYTES(1)));
 
-  lvk::VkState vk = lvk::init::Create<lvk::VkSDL>("Harmony Engine", w, h, enableMSAA);
-  lvk::LvkIm3dState im3d = lvk::LoadIm3D(vk);
+  lvk::VkState* vk = HNY_NEW(lvk::VkState, lvk::init::Create<lvk::VkSDL, mimalloc_allocator_lvk>("Harmony Engine", w, h, enableMSAA, enableValidation));
+  lvk::LvkIm3dState* im3d = HNY_NEW(lvk::LvkIm3dState, lvk::LoadIm3D(*vk));
 
-  return Engine{ std::move(mem), std::move(vk), im3d, enableMSAA};
+  return Engine{ std::move(mem), Unique<lvk::VkState>(vk), Unique<lvk::LvkIm3dState>(im3d), enableMSAA};
 }
 
-bool Engine::ShouldRun() { return mVK.m_Backend->ShouldRun(mVK); }
+bool Engine::ShouldRun() { return mVK->m_Backend->ShouldRun(*mVK); }
 
 void Engine::PreFrame() {
-  mVK.m_Backend->PreFrame(mVK);
+  mVK->m_Backend->PreFrame(*mVK);
   Im3d::NewFrame();
   HNY_LOG_INFO("Some Message");
 }
 
 void Engine::EndFrame() {
   Im3d::EndFrame();
-  mVK.m_Backend->PostFrame(mVK);
+  mVK->m_Backend->PostFrame(*mVK);
 }
 void Engine::Shutdown()
 {
-	lvk::FreeIm3d(mVK, mIm3D);
-	lvk::init::Cleanup(mVK);
+	lvk::FreeIm3d(*mVK, *mIm3D);
+	lvk::init::Cleanup(*mVK);
+	// Explicitly cleanup these objects which have
+	// allocations that become null (but attempted during dtor)
+	mIm3D.reset();
+	mVK.reset();
 	mMemory.Free();	
 }
 } // namespace harmony
