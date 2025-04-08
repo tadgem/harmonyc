@@ -99,14 +99,10 @@ struct Memory {
   {
       mi_heap_set_default(mPreviousHeap);
       mi_collect(true);
-      memset(sMemory, 0, static_cast<size_t>(sAllocatedBytes));
+      _aligned_free(sMemory);
       sMemory = nullptr;
   }
 
-  static void FreeGlobal()
-  {
-      std::free(sMemory);
-  }
 
   static void InitGlobal(uint64 upfrontMemory)
   {
