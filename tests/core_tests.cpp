@@ -11,11 +11,13 @@ TestResult AssetManagerTest1(Engine* e)
 	static bool load_called = false;
 	static bool unload_called = false;
 
-	auto test_load_func = [](const String& path) { 
+	auto test_load_func = [](const String& path) {
+		mi_thread_init();
 		load_called = true;
 		TestBinaryAsset* asset = HNY_NEW(TestBinaryAsset, path, 0);
 		TestBinaryIntermediate* intermediate = HNY_NEW(TestBinaryIntermediate, asset, 0);
 		return AssetLoadResult{ intermediate, {}, {} };
+		mi_thread_done();
 	};
 
 	auto test_unload_func = [](Asset* a) { unload_called = true; };

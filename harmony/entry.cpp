@@ -40,17 +40,17 @@ int main() {
 
   printf("Handle Str : %s\n", handle.mPath.c_str());
   {
-    glm::vec3 someUniqueData = glm::vec3(10, 20, 30);
-    AssetT<glm::vec3, AssetType::Audio> asset(someString, someUniqueData);
-    AssetIntermediateT<glm::vec3, glm::vec3, AssetType::Audio> inter(
-        static_cast<Asset *>(&asset), glm::vec3(0.0f));
+    lvk::Vector3 someUniqueData = { 10, 20, 30 };
+    AssetT<lvk::Vector3, AssetType::Audio> asset(someString, someUniqueData);
+    AssetIntermediateT<lvk::Vector3, lvk::Vector3, AssetType::Audio> inter(
+    static_cast<Asset*>(&asset), lvk::Vector3{ 0.0f, 0.0f, 0.0f });
 
-    glm::vec3 result = asset.mData;
+    lvk::Vector3 result = asset.mData;
   }
 
   flecs::world ecs{};
   flecs::entity e = ecs.entity();
-  e.insert([](glm::vec3 position) { position = {1, 2, 3}; });
+  e.insert([](lvk::Vector3 position) { position = {1, 2, 3}; });
 
   Json someJson;
   someJson["dad"] = 3;

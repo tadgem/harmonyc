@@ -5,11 +5,14 @@ set (CMAKE_CXX_STANDARD 17)
 
 # Add clang compile_commands.json for nvim
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
-
+set(MI_BUILD_SHARED OFF CACHE INTERNAL "")
+# Enable this to remove the examples + their dependencies (glm, assimp)
+# set(BUILD_LVK_EXAMPLES OFF CACHE INTERNAL "Disable LVK Examples")
 add_subdirectory(submodules/lvk)
 add_subdirectory(submodules/flecs)
+add_subdirectory(third_party/mimalloc)
 
-set(harmonyc_libs lvk lvk-sdl flecs_static)
+set(harmonyc_libs lvk lvk-sdl flecs_static mimalloc-static)
 set(harmonyc_definitions "EASTL_EABASE_DISABLED")
 set(harmonyc_includes
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/eastl/include

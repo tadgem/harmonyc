@@ -2,6 +2,7 @@
 #include "EASTL/allocator.h"
 #include "Primitives.h"
 #include "Macros.h"
+#undef MI_DEBUG
 #include "mimalloc.h"
 
 /// <summary>
@@ -97,11 +98,9 @@ struct Memory {
   void Free()
   {
       mi_heap_set_default(mPreviousHeap);
-
-      // TODO: Investigate releasing a heap properly.
-      // mi_heap_delete(mHeap);
-      
+      mi_collect(true);
       memset(sMemory, 0, static_cast<size_t>(sAllocatedBytes));
+      sMemory = nullptr;
   }
 
   static void FreeGlobal()
@@ -111,18 +110,16 @@ struct Memory {
 
   static void InitGlobal(uint64 upfrontMemory)
   {
-      if (sMemory == nullptr)
-      {
-          sMemory = std::malloc(upfrontMemory);
-          sAllocatedBytes = upfrontMemory;
-          memset(sMemory, 0, sAllocatedBytes);
-          mi_option_set(mi_option_show_errors, 1);
-          mi_option_set(mi_option_verbose, 1);
-          mi_option_set(mi_option_arena_eager_commit, 1);
-          mi_option_set(mi_option_purge_delay, 0);
-          mi_option_set(mi_option_purge_decommits, 0);
-          mi_option_set(mi_option_allow_large_os_pages, 1);
-      }
+    sMemory = _aligned_malloc(upfrontMemory, KILOBYTES(64));
+    sAllocatedBytes = upfrontMemory;
+    memset(sMemory, 0, sAllocatedBytes);
+    mi_option_set(mi_option_show_errors, 1);
+    mi_option_set(mi_option_verbose, 1);
+    mi_option_set(mi_option_arena_eager_commit, 1);
+    mi_option_set(mi_option_purge_delay, 0);
+    mi_option_set(mi_option_purge_decommits, 0);
+    mi_option_set(mi_option_allow_large_os_pages, 1);
+      
   }
 
   static Memory Create(uint64 upfrontMemory) {
