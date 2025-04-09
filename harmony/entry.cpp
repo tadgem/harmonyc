@@ -51,7 +51,7 @@ int main() {
   flecs::world ecs{};
   flecs::entity e = ecs.entity();
   e.insert([](lvk::Vector3 position) { position = {1, 2, 3}; });
-
+  
   Json someJson;
   someJson["dad"] = 3;
   int64 val = someJson["dad"];

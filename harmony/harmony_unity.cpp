@@ -15,3 +15,4 @@
 #include "AssetManager.cpp"
 #include "STL.cpp"
 #include "Utils.cpp"
+#include "ECS.cpp"

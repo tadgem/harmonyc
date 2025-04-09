@@ -15,6 +15,7 @@
 #include "Memory.h"
 #include "STL.h"
 #include "Timer.h"
+#include "ECS.h"
 #include "VkTech.h"
 #include "harmony_unity.cpp"
 

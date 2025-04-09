@@ -56,10 +56,17 @@ Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA, uint64 upfrontMemory, b
 
   HNY_LOG_INFO("Allocated Engine Memory : %llu MB\n", upfrontMemory / (MEGABYTES(1)));
 
-  lvk::VkState* vk = HNY_NEW(lvk::VkState, lvk::init::Create<lvk::VkSDL, mimalloc_allocator_lvk>("Harmony Engine", w, h, enableMSAA, enableValidation));
-  lvk::LvkIm3dState* im3d = HNY_NEW(lvk::LvkIm3dState, lvk::LoadIm3D(*vk));
+  lvk::VkState* vk			= HNY_NEW(lvk::VkState, lvk::init::Create<lvk::VkSDL, mimalloc_allocator_lvk>("Harmony Engine", w, h, enableMSAA, enableValidation));
+  lvk::LvkIm3dState* im3d	= HNY_NEW(lvk::LvkIm3dState, lvk::LoadIm3D(*vk));
+  AssetManager* am			= HNY_NEW(AssetManager);
 
-  return Engine{ std::move(mem), Unique<lvk::VkState>(vk), Unique<lvk::LvkIm3dState>(im3d), enableMSAA};
+  return Engine{
+	  std::move(mem),
+	  Unique<AssetManager>(am),
+	  Unique<lvk::VkState>(vk), 
+	  Unique<lvk::LvkIm3dState>(im3d), 
+	  enableMSAA
+  };
 }
 
 bool Engine::ShouldRun() { return mVK->m_Backend->ShouldRun(*mVK); }
@@ -80,6 +87,7 @@ void Engine::Shutdown()
 	lvk::init::Cleanup(*mVK);
 	// Explicitly cleanup these objects which have
 	// allocations that become null (but attempted during dtor)
+	mAssetManager.reset();
 	mIm3D.reset();
 	mVK.reset();
 	mMemory.Free();	

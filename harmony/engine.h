@@ -4,10 +4,13 @@
 #include "Primitives.h"
 #include "VkSDL.h"
 #include "VkTech.h"
+#include "AssetManager.h"
+
 namespace harmony {
 class Engine {
 public:
   Memory                    mMemory;
+  Unique<AssetManager>      mAssetManager;
   Unique<lvk::VkState>      mVK;
   Unique<lvk::LvkIm3dState> mIm3D;
   bool                      mEnableMSAA = false;

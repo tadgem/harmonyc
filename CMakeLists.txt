@@ -6,6 +6,7 @@ set (CMAKE_CXX_STANDARD 17)
 # Add clang compile_commands.json for nvim
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 set(MI_BUILD_SHARED OFF CACHE INTERNAL "")
+set(MI_BUILD_TESTS OFF CACHE INTERNAL "")
 # Enable this to remove the examples + their dependencies (glm, assimp)
 # set(BUILD_LVK_EXAMPLES OFF CACHE INTERNAL "Disable LVK Examples")
 add_subdirectory(submodules/lvk)
@@ -34,8 +35,8 @@ function(add_harmony_exe exe_name entry_file)
 	target_include_directories(${exe_name} PRIVATE ${harmonyc_includes})
 endfunction()
 
-add_harmony_exe(harmonyc harmony/entry.cpp)
-add_harmony_exe(harmonyc_tests tests/core_tests.cpp)
+add_harmony_exe(harmonyc harmony/Entry.cpp)
+add_harmony_exe(harmonyc_tests tests/CoreTests.cpp)
 
 add_custom_command(
         TARGET harmonyc_tests POST_BUILD
