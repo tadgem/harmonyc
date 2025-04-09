@@ -1,14 +1,14 @@
 #include "HarmonyTest.h"
 
 using namespace harmony;
-using TestBinaryAsset = AssetT<Vector<char>, AssetType::Binary>;
-using TestBinaryIntermediate = AssetIntermediateT<Vector<char>, char, AssetType::Binary>;
+using	TestBinaryAsset			= AssetT<Vector<char>, AssetType::Binary>;
+using	TestBinaryIntermediate	= AssetIntermediateT<Vector<char>, char, AssetType::Binary>;
 
-struct TestComponent
+struct	TestComponent
 {
-	int x;
-	float y;
-	double z;
+	int		x;
+	float	y;
+	double	z;
 };
 
 TestResult AssetManagerProvidedFunctionsUsed(Engine* e)
