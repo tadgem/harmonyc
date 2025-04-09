@@ -50,9 +50,9 @@ struct TestResult {
 
 
 #define TEST_APP_BEGIN_SUITE(suite_name)                            \
-HARMONY_OVERRIDE_GLOBAL_NEW(true)                                  \
+HARMONY_OVERRIDE_GLOBAL_NEW(true)                                   \
 int main() {                                                        \
-TestVector<harmony::TestResult> sResults{};         \
+TestVector<harmony::TestResult> sResults{};                         \
 TestString sCurrentTestName = "";                                   \
 HNY_LOG_INFO("%s Tests\n", suite_name);                             \
 
@@ -62,12 +62,12 @@ HNY_LOG_INFO("%s Tests\n", suite_name);                             \
     if(result.mResult != harmony::TestResultEnum::Pass) { HNY_LOG_ERROR(" > Message : %s\n", result.mResultMessage.c_str());}\
 }};
 
-#define ADD_TEST(TEST_NAME) {\
-HNY_LOG_INFO("Running Test : %s\n", #TEST_NAME);\
-harmony::Engine e = harmony::Engine::Init(1280, 720, false, MEGABYTES(512), false);\
-harmony::Timer timer_##TEST_NAME;\
-auto result_##TEST_NAME = TEST_NAME(&e);\
-result_##TEST_NAME.mName = #TEST_NAME;\
-f64 time_taken_##TEST_NAME = timer_##TEST_NAME.ElapsedMillisecondsF();\
-result_##TEST_NAME.mElapsedMs = time_taken_##TEST_NAME;\
+#define ADD_TEST(TEST_NAME) {                                                       \
+HNY_LOG_INFO("Running Test : %s\n", #TEST_NAME);                                    \
+harmony::Engine e = harmony::Engine::Init(1280, 720, false, MEGABYTES(512), false); \
+harmony::Timer timer_##TEST_NAME;                                                   \
+auto result_##TEST_NAME = TEST_NAME(&e);                                            \
+result_##TEST_NAME.mName = #TEST_NAME;                                              \
+f64 time_taken_##TEST_NAME = timer_##TEST_NAME.ElapsedMillisecondsF();              \
+result_##TEST_NAME.mElapsedMs = time_taken_##TEST_NAME;                             \
 sResults.push_back(result_##TEST_NAME);}
