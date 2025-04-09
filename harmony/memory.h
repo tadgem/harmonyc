@@ -110,7 +110,7 @@ struct Memory {
     sAllocatedBytes = upfrontMemory;
     memset(sMemory, 0, sAllocatedBytes);
     mi_option_set(mi_option_show_errors, 1);
-    mi_option_set(mi_option_verbose, 1);
+    mi_option_set(mi_option_verbose, 0);
     mi_option_set(mi_option_arena_eager_commit, 1);
     mi_option_set(mi_option_purge_delay, 0);
     mi_option_set(mi_option_purge_decommits, 0);

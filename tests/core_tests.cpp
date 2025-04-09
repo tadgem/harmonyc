@@ -1,20 +1,21 @@
 #include "harmony_test.h"
 
 using namespace harmony;
-
+using TestBinaryAsset = AssetT<Vector<char>, AssetType::Binary>;
+using TestBinaryIntermediate = AssetIntermediateT<Vector<char>, char, AssetType::Binary>;
 
 TestResult AssetManagerTest1(Engine* e)
 {
 	AssetManager am;
-	using TestBinaryAsset = AssetT<char, AssetType::Binary>;
-	using TestBinaryIntermediate = AssetIntermediateT<char, char, AssetType::Binary>;
+
 	static bool load_called = false;
 	static bool unload_called = false;
 
 	auto test_load_func = [](const String& path) {
 		mi_thread_init();
 		load_called = true;
-		TestBinaryAsset* asset = HNY_NEW(TestBinaryAsset, path, 0);
+		auto data = Vector<char>{};
+		TestBinaryAsset* asset = HNY_NEW(TestBinaryAsset, path, data);
 		TestBinaryIntermediate* intermediate = HNY_NEW(TestBinaryIntermediate, asset, 0);
 		return AssetLoadResult{ intermediate, {}, {} };
 		mi_thread_done();
@@ -47,75 +48,44 @@ TestResult AssetManagerTest1(Engine* e)
 	return TestResult::Pass();
 }
 
-TestResult AssetManagerTest2(Engine* e)
+TestResult AssetManagerTestDataLoaded(Engine* e)
 {
-	return AssetManagerTest1(e);
-}
+	AssetManager am;
 
-TestResult AssetManagerTest3(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest4(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest5(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest6(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest7(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest8(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest9(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest10(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest11(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest12(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest13(Engine* e)
-{
-	return AssetManagerTest1(e);
-}
-TestResult AssetManagerTest14(Engine* e)
-{
-	return AssetManagerTest1(e);
+	auto test_load_func = [](const String& path) {
+		Vector<char> data = Utils::LoadBinaryFromPath(path.c_str());
+		TestBinaryAsset* asset = HNY_NEW(TestBinaryAsset, path, data);
+		TestBinaryIntermediate* intermediate = HNY_NEW(TestBinaryIntermediate, asset, 0);
+		return AssetLoadResult{ intermediate, {}, {} };
+		};
+
+	auto test_unload_func = [](Asset* a) {
+		};
+
+	am.ProvideAssetTypeLoadFunction(
+		AssetType::Binary,
+		test_load_func,
+		test_unload_func
+	);
+
+	auto handle = am.LoadAsset("test.bin", AssetType::Binary);
+
+	while (am.AnyAssetsLoading())
+	{
+		am.Update();
+	}
+
+	auto* bin_asset = am.GetAsset<TestBinaryAsset>(handle);
+
+	auto bin_size = bin_asset->mData.size();
+
+	TEST_ASSERT(bin_size == 16, "Data loaded was not the correct size");
+	return TestResult::Pass();
 }
 
 TEST_APP_BEGIN_SUITE("Core Engine Functionality")
 
 ADD_TEST(AssetManagerTest1)
-ADD_TEST(AssetManagerTest2)
-ADD_TEST(AssetManagerTest3)
-ADD_TEST(AssetManagerTest4)
-ADD_TEST(AssetManagerTest5)
-ADD_TEST(AssetManagerTest6)
-ADD_TEST(AssetManagerTest7)
-ADD_TEST(AssetManagerTest8)
-ADD_TEST(AssetManagerTest9)
-ADD_TEST(AssetManagerTest10)
-ADD_TEST(AssetManagerTest11)
-ADD_TEST(AssetManagerTest12)
-ADD_TEST(AssetManagerTest13)
-ADD_TEST(AssetManagerTest14)
+ADD_TEST(AssetManagerTestDataLoaded)
 
 TEST_APP_END_SUITE()

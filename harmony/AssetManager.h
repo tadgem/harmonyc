@@ -58,6 +58,18 @@ public:
 
   void UnloadAsset(const AssetHandle &handle);
   Asset *GetAsset(const AssetHandle &handle);
+
+  template<typename _Ty>
+  _Ty* GetAsset(const AssetHandle& handle)
+  {
+      static_assert(std::is_base_of<Asset, _Ty>() && "Provided type is not an asset");
+      auto* a = GetAsset(handle);
+      if (a)
+      {
+          return static_cast<_Ty*>(a);
+      }
+      return nullptr;
+  }
   AssetLoadProgress GetAssetLoadProgress(const AssetHandle &handle);
 
   bool AnyAssetsLoading();
