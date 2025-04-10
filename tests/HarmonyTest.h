@@ -9,6 +9,7 @@
 #include "Json.h"
 #include "Macros.h"
 #include "Memory.h"
+#include "Maths.h"
 #include "STL.h"
 #include "Timer.h"
 #include "Utils.h"
@@ -38,6 +39,7 @@ struct TestResult {
 
 #define STRINGIZE_DETAIL(x) #x
 #define STRINGIZE(x) STRINGIZE_DETAIL(x)
+#define FLOATING_POINT_ROUGHLY_EQUAL(x, y) abs(x) - abs(y) <= FLT_EPSILON
 
 #define TEST_ASSERT(cond, message, ...)                                                     \
   if (!(cond)) {                                                                            \
@@ -46,9 +48,10 @@ struct TestResult {
   }                                                                                         \
 
 
-#define TEST_APP_BEGIN_SUITE(suite_name)                            \
+#define TEST_APP_BEGIN_SUITE(suite_name, engine_heap_size)          \
 HARMONY_OVERRIDE_GLOBAL_NEW(true)                                   \
 int main() {                                                        \
+constexpr uint64 TEST_HEAP_SIZE = engine_heap_size;                 \
 TestVector<harmony::TestResult> sResults{};                         \
 TestString sCurrentTestName = "";                                   \
 HNY_LOG_INFO("%s Tests\n", suite_name);                             \
@@ -61,7 +64,7 @@ HNY_LOG_INFO("%s Tests\n", suite_name);                             \
 
 #define ADD_TEST(TEST_NAME) {                                                       \
 HNY_LOG_INFO("Running Test : %s\n", #TEST_NAME);                                    \
-harmony::Engine e = harmony::Engine::Init(1280, 720, false, MEGABYTES(512), false); \
+harmony::Engine e = harmony::Engine::Init(1280, 720, false, TEST_HEAP_SIZE, false); \
 harmony::Timer timer_##TEST_NAME;                                                   \
 auto result_##TEST_NAME = TEST_NAME(&e);                                            \
 result_##TEST_NAME.mName = #TEST_NAME;                                              \

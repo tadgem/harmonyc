@@ -154,7 +154,7 @@ TestResult CanIterateOverComponentData(Engine* e)
 	return TestResult::Pass();
 }
 
-TEST_APP_BEGIN_SUITE("Core Engine Functionality")
+TEST_APP_BEGIN_SUITE("Engine", MEGABYTES(512))
 
 ADD_TEST(AssetManagerProvidedFunctionsUsed)
 ADD_TEST(AssetManagerTestDataLoaded)
