@@ -1,9 +1,9 @@
 #pragma once
-#include "EASTL/chrono.h"
+#include <chrono>
 #include "Primitives.h"
 namespace harmony
 {
-	typedef stl::chrono::high_resolution_clock HighResolutionClock;
+	typedef std::chrono::high_resolution_clock HighResolutionClock;
 
 	class Timer
 	{

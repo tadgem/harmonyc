@@ -74,7 +74,6 @@ bool Engine::ShouldRun() { return mVK->m_Backend->ShouldRun(*mVK); }
 void Engine::PreFrame() {
   mVK->m_Backend->PreFrame(*mVK);
   Im3d::NewFrame();
-  HNY_LOG_INFO("Some Message");
 }
 
 void Engine::EndFrame() {
@@ -83,13 +82,18 @@ void Engine::EndFrame() {
 }
 void Engine::Shutdown()
 {
+	
 	lvk::FreeIm3d(*mVK, *mIm3D);
+	// TODO: Why does closing the window cause Vulkan Validation Layers
+	// to throw an exception?!
 	lvk::init::Cleanup(*mVK);
-	// Explicitly cleanup these objects which have
-	// allocations that become null (but attempted during dtor)
-	mAssetManager.reset();
-	mIm3D.reset();
+
+	// Explicitly cleanup engine systems prior to memory being freed.
 	mVK.reset();
+	mIm3D.reset();
+	mAssetManager.reset();
+
+	// Free all engine memory
 	mMemory.Free();	
 }
 } // namespace harmony
