@@ -1,9 +1,5 @@
 #pragma once
 #include <cstdio>
-#include "EASTL/allocator_malloc.h"
-#include "EASTL/vector.h"
-#include "EASTL/map.h"
-#include "EASTL/string.h"
 #define FLECS_USE_OS_ALLOC
 #include "flecs.h"
 #include "flecs/addons/cpp/flecs.hpp"
@@ -22,12 +18,12 @@
 namespace harmony {
 enum class TestResultEnum { Fail = -1, Pass = 0, DNF = 1 };
 
-using TestString = eastl::basic_string<char, eastl::allocator_malloc>;
+using TestString = std::basic_string<char, std::char_traits<char>, std::allocator<char>>;
 
 template<typename _Value>
-using TestVector = eastl::vector<
+using TestVector = std::vector<
     _Value,
-    eastl::allocator_malloc>;
+    std::allocator<_Value>>;
 
 struct TestResult {
     TestString        mName;

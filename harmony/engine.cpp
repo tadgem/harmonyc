@@ -87,9 +87,11 @@ void Engine::Shutdown()
 	lvk::init::Cleanup(*mVK);
 	// Explicitly cleanup these objects which have
 	// allocations that become null (but attempted during dtor)
-	mAssetManager.reset();
-	mIm3D.reset();
+
 	mVK.reset();
+	mIm3D.reset();
+
+	mAssetManager.reset();
 	mMemory.Free();	
 }
 } // namespace harmony

@@ -16,8 +16,6 @@ add_subdirectory(third_party/mimalloc)
 set(harmonyc_libs lvk lvk-sdl flecs_static mimalloc-static)
 set(harmonyc_definitions "EASTL_EABASE_DISABLED")
 set(harmonyc_includes
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/eastl/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/eastl/source
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/include
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/src
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party

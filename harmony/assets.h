@@ -95,9 +95,9 @@ public:
 /// <summary>
 /// Allow AssetHandle to be used as a key in unordered_map
 /// </summary>
-template <> struct eastl::hash<harmony::AssetHandle> {
+template <> struct std::hash<harmony::AssetHandle> {
   size_t operator()(const harmony::AssetHandle &ah) const {
-    return eastl::hash<int64>()(ah.mPathHash) ^
-           eastl::hash<uint8>()(static_cast<uint8>(ah.mType));
+    return std::hash<int64>()(ah.mPathHash) ^
+           std::hash<uint8>()(static_cast<uint8>(ah.mType));
   }
 };
