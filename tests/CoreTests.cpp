@@ -131,14 +131,16 @@ TestResult CanMutateComponentData(Engine* e)
 TestResult CanIterateOverComponentData(Engine* e)
 {
 	Scene s = Scene("Test");
-	auto entity = s.CreateEntity();
-	TestComponent& tc = entity.AddComponent<TestComponent>();
+	auto entity1 = s.CreateEntity();
+	auto entity2 = s.CreateEntity();
+	TestComponent& tc1 = entity1.AddComponent<TestComponent>();
+	TestComponent& tc2 = entity2.AddComponent<TestComponent>();
 
-	bool function_called = false;
+	int callcount = 0;
 	
-	auto testComponentFunction = [&function_called](flecs::iter& it, size_t, TestComponent& tc)
+	auto testComponentFunction = [&callcount](flecs::iter& it, size_t, TestComponent& tc)
 	{
-		function_called = true;
+		callcount++;
 	};
 
 	s.mWorld.system<TestComponent>().
@@ -146,7 +148,7 @@ TestResult CanIterateOverComponentData(Engine* e)
 
 	s.mWorld.progress();
 
-	TEST_ASSERT(function_called, 
+	TEST_ASSERT(callcount == 2, 
 		"Provided a system callback for ecs world, progressed world, but function was not called");
 
 	return TestResult::Pass();
