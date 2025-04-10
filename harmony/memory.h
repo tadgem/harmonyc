@@ -1,5 +1,4 @@
 #pragma once
-#include "EASTL/allocator.h"
 #include "Primitives.h"
 #include "Macros.h"
 #undef MI_DEBUG
@@ -31,34 +30,6 @@
 #define HNY_DELETE(Obj) mi_free(Obj)
 
 namespace harmony {
-class mimalloc_allocator {
-public:
-  EASTL_ALLOCATOR_EXPLICIT
-  mimalloc_allocator(const char *pName = "mimalloc_allocator") {}
-  mimalloc_allocator(const mimalloc_allocator &x) {}
-  mimalloc_allocator(const mimalloc_allocator &x, const char *pName) {}
-
-  mimalloc_allocator &operator=(const mimalloc_allocator &x) { return *this; }
-
-  void *allocate(size_t n, int flags = 0) { return mi_malloc(n); }
-
-  void *allocate(size_t n, size_t alignment, size_t offset, int flags = 0) {
-    return mi_malloc_aligned_at(n, alignment, offset);
-  }
-
-  void deallocate(void *p, size_t n) {
-    // TODO: Verify n is size and not alignment specifier
-    return mi_free_size(p, n);
-  }
-
-  const char *get_name() const { return "mimalloc_allocator"; }
-  void set_name(const char *pName) {};
-
-protected:
-#if EASTL_NAME_ENABLED
-  const char *pName; // Debug name, used to track memory.
-#endif
-};
 
 template <class T> struct STLMimallocAllocator {
   typedef T value_type;
@@ -81,7 +52,7 @@ template <class T> struct STLMimallocAllocator {
 
 template <typename T> class mimalloc_default_delete {
 public:
-  void operator()(T *p) const EA_NOEXCEPT { mi_free((void *)p); }
+  void operator()(T *p) const { mi_free((void *)p); }
 };
 
 /// <summary>

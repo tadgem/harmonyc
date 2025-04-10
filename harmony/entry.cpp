@@ -1,8 +1,5 @@
 #include <cstdio>
 
-#include "EASTL/allocator_malloc.h"
-#include "EASTL/vector.h"
-
 #include "lvk/lvk.h"
 
 #include "Assets.h"
@@ -17,7 +14,6 @@
 #define FLECS_USE_OS_ALLOC
 #include "flecs.h"
 #include "flecs/addons/cpp/flecs.hpp"
-#include "harmony_unity.cpp"
 
 HARMONY_OVERRIDE_GLOBAL_NEW(true)
 
@@ -28,10 +24,9 @@ void OnImGui(harmony::Engine &e) {
 }
 
 int main() {
-  using namespace eastl;
   using namespace harmony;
 
-  Engine engine = Engine::Init();
+  Engine engine = Engine::Init(1920, 1080, false, GIGABYTES(4), false);
 
   AssetHandle sh{};
   String someString = "Hello";
