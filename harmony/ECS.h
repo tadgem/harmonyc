@@ -41,9 +41,6 @@ namespace harmony
 		Entity	CreateEntity();
 	};
 
-	/// <summary>
-	/// One system -> many scenes.
-	/// </summary>
 	class System
 	{
 	public:
@@ -51,15 +48,51 @@ namespace harmony
 		System(const str_hash& systemHash) : mSystemHash(systemHash) {}
 		System(const String& systemName) : mSystemHash(HashString(systemName)) {}
 
+		/// <summary>
+		/// Initialize callbacks and operations 
+		/// for component data which interacts with this sytem
+		/// </summary>
+		/// <param name="s"></param>
 		virtual void Init(Scene& s) = 0;
-		virtual void Update(Scene& s) = 0;
-		virtual void Render(Scene& s) = 0;
+
+		/// <summary>
+		/// Remove callbacks
+		/// </summary>
+		/// <param name="s"></param>
 		virtual void Cleanup(Scene& s) = 0;
 		
+		/// <summary>
+		/// Return JSON representing the system state
+		/// </summary>
+		/// <param name="s">Scene to serialize</param>
+		/// <returns>JSON representing the systems serializable state for all entities</returns>
 		virtual Json Serialize(Scene& s) = 0;
+
+		/// <summary>
+		/// Given some json, deserialize and create appropriate components for a 
+		/// collection of entities
+		/// </summary>
+		/// <param name="s"></param>
+		/// <param name="sceneJson"></param>
 		virtual void Deserialize(Scene& s, Json sceneJson) = 0;
 
+
+		/// <summary>
+		/// Serialize all components on a given entity for this systems
+		/// managed components
+		/// </summary>
+		/// <param name="s"></param>
+		/// <param name="e"></param>
+		/// <returns></returns>
 		virtual Json SerializeEntity(Scene& s, Entity& e) = 0;
+
+		/// <summary>
+		/// Given some json, deserialize and create appropriate components for a 
+		/// single entity
+		/// </summary>
+		/// <param name="s">Scene to deserialize into</param>
+		/// <param name="e">Entity to deserialize into</param>
+		/// <param name="sceneJson">JSON to be deserialized</param>
 		virtual void DeserializeEntity(Scene& s, Entity& e, Json sceneJson) = 0;
 
 		static String GetEntityIdAsString(Entity& e);

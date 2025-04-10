@@ -143,10 +143,10 @@ TestResult CanIterateOverComponentData(Engine* e)
 		callcount++;
 	};
 
-	s.mWorld.system<TestComponent>().
+	auto sys = s.mWorld.system<TestComponent>().
 		each(testComponentFunction);
 
-	s.mWorld.progress();
+	sys.run();
 
 	TEST_ASSERT(callcount == 2, 
 		"Provided a system callback for ecs world, progressed world, but function was not called");
