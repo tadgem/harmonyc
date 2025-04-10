@@ -14,7 +14,6 @@
 #define FLECS_USE_OS_ALLOC
 #include "flecs.h"
 #include "flecs/addons/cpp/flecs.hpp"
-#include "harmony_unity.cpp"
 
 HARMONY_OVERRIDE_GLOBAL_NEW(true)
 

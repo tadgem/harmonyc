@@ -15,6 +15,14 @@ add_subdirectory(third_party/mimalloc)
 
 set(harmonyc_libs lvk lvk-sdl flecs_static mimalloc-static)
 set(harmonyc_definitions "EASTL_EABASE_DISABLED")
+set(harmonyc_srcs 
+  ${CMAKE_CURRENT_SOURCE_DIR}/harmony/AssetManager.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/harmony/Assets.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/harmony/ECS.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/harmony/Engine.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/harmony/STL.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/harmony/Utils.cpp
+)
 set(harmonyc_includes
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/include
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/src
@@ -27,7 +35,7 @@ set(harmonyc_includes
 )
 
 function(add_harmony_exe exe_name entry_file)
-	add_executable(${exe_name} ${entry_file})
+	add_executable(${exe_name} ${harmonyc_srcs} ${entry_file})
 	target_compile_definitions(${exe_name} PRIVATE ${harmonyc_definitions} )
 	target_link_libraries(${exe_name} ${harmonyc_libs})
 	target_include_directories(${exe_name} PRIVATE ${harmonyc_includes})

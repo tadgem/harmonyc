@@ -1,6 +1,0 @@
-#include "Engine.cpp"
-#include "Assets.cpp"
-#include "AssetManager.cpp"
-#include "STL.cpp"
-#include "Utils.cpp"
-#include "ECS.cpp"

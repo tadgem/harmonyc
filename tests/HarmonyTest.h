@@ -11,9 +11,9 @@
 #include "Memory.h"
 #include "STL.h"
 #include "Timer.h"
+#include "Utils.h"
 #include "ECS.h"
 #include "VkTech.h"
-#include "harmony_unity.cpp"
 
 namespace harmony {
 enum class TestResultEnum { Fail = -1, Pass = 0, DNF = 1 };

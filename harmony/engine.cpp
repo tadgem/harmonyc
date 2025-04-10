@@ -74,7 +74,6 @@ bool Engine::ShouldRun() { return mVK->m_Backend->ShouldRun(*mVK); }
 void Engine::PreFrame() {
   mVK->m_Backend->PreFrame(*mVK);
   Im3d::NewFrame();
-  HNY_LOG_INFO("Some Message");
 }
 
 void Engine::EndFrame() {
