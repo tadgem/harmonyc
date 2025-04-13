@@ -3,10 +3,109 @@
 #include "Macros.h"
 #include "SDL3/SDL.h"
 
-#define SCALAR_TYPE f64
+#define SCALAR_TYPE f32
+
+#define VECTOR_OP_IMPL(VEC_DIM) \
+SCALAR_TYPE& operator[](int index)\
+{\
+	HNY_ASSERT(index < ##VEC_DIM, "Index out of range for Vector##VEC_DIM");\
+	return values[index];\
+}\
+\
+const SCALAR_TYPE& operator[](int index) const\
+{\
+	HNY_ASSERT(index < ##VEC_DIM, "Index out of range for Vector##VEC_DIM");\
+	return values[index];\
+}\
+\
+SCALAR_TYPE Magnitude() {\
+	SCALAR_TYPE _sqr_val = 0.0;\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		_sqr_val += values[n] * values[n];\
+	}\
+	return SDL_sqrtf(_sqr_val);\
+}\
+\
+Vector##VEC_DIM	operator*(const SCALAR_TYPE& s)\
+{\
+	Vector##VEC_DIM _ret = *this;\
+	\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		_ret[n] *= s;\
+	}\
+	return _ret;\
+}\
+\
+Vector##VEC_DIM& operator*=(const SCALAR_TYPE& s)\
+{\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		values[n] *= s;\
+	}\
+	return (*this);\
+}\
+\
+Vector##VEC_DIM	operator*(const Vector##VEC_DIM& s)\
+{\
+	Vector##VEC_DIM _ret = *this;\
+		\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		_ret[n] *= s[n];\
+	}\
+	return _ret;\
+}\
+\
+Vector##VEC_DIM& operator*=(const Vector##VEC_DIM& s)\
+{\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		values[n] *= s[n];\
+	}\
+	return (*this);\
+}\
+Vector##VEC_DIM	operator+(const Vector##VEC_DIM& s)\
+{\
+	Vector##VEC_DIM _ret = *this;\
+		\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		_ret[n] += s[n];\
+	}\
+	return _ret;\
+}\
+Vector##VEC_DIM& operator+=(const Vector##VEC_DIM& s)\
+{\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		values[n] += s[n];\
+	}\
+	return (*this);\
+}\
+Vector##VEC_DIM	operator-(const Vector##VEC_DIM& s)\
+{\
+	Vector##VEC_DIM _ret = *this;\
+		\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		_ret[n] -= s[n];\
+	}\
+	return _ret;\
+}\
+Vector##VEC_DIM& operator-=(const Vector##VEC_DIM& s)\
+{\
+	for (auto n = 0; n < ##VEC_DIM; n++)\
+	{\
+		values[n] -= s[n];\
+	}\
+	return (*this);\
+}\
 
 namespace harmony
 {
+
 	/// <summary>
 	/// Vector Definitions
 	/// </summary>
@@ -18,29 +117,7 @@ namespace harmony
 			};
 			SCALAR_TYPE values[2];
 		};
-
-		Vector2() : x(0.0), y(0.0) {}
-		Vector2(const SCALAR_TYPE& initialValue) : x(initialValue), y(initialValue) {}
-		Vector2(const SCALAR_TYPE& _x, const SCALAR_TYPE& _y) : x(_x), y(_y) {}
-
-		SCALAR_TYPE& operator[](int index)
-		{
-			HNY_ASSERT(index < 2, "Index out of range for Vector2");
-			return values[index];
-		}
-
-		const SCALAR_TYPE& operator[](int index) const
-		{
-			HNY_ASSERT(index < 2, "Index out of range for Vector2");
-			return values[index];
-		}
-
-		SCALAR_TYPE Magnitude() { return SDL_sqrtf(x * x + y * y); }
-
-		Vector2	operator*(const SCALAR_TYPE& s)
-		{
-			return Vector2(x * s, y * s);
-		}
+		VECTOR_OP_IMPL(2)
 	};
 
 	struct Vector3
@@ -52,28 +129,7 @@ namespace harmony
 			SCALAR_TYPE values[3];
 		};
 
-		Vector3() : x(0.0), y(0.0), z(0.0) {}
-		Vector3(const SCALAR_TYPE& initialValue) : x(initialValue), y(initialValue), z(initialValue) {}
-		Vector3(const SCALAR_TYPE& _x, const SCALAR_TYPE& _y, const SCALAR_TYPE& _z) : x(_x), y(_y), z(_z) {}
-
-		SCALAR_TYPE& operator[](int index)
-		{
-			HNY_ASSERT(index < 3, "Index out of range for Vector3");
-			return values[index];
-		}
-
-		const SCALAR_TYPE& operator[](int index) const
-		{
-			HNY_ASSERT(index < 3, "Index out of range for Vector3");
-			return values[index];
-		}
-
-		SCALAR_TYPE Magnitude() { return SDL_sqrtf(x * x + y * y + z * z); }
-
-		Vector3	operator*(const SCALAR_TYPE& s)
-		{
-			return Vector3(x * s, y * s, z * s);
-		}
+		VECTOR_OP_IMPL(3)
 	};
 
 
@@ -86,28 +142,7 @@ namespace harmony
 			SCALAR_TYPE values[4];
 		};
 
-		Vector4() : x(0.0), y(0.0), z(0.0), w(0.0) {}
-		Vector4(const SCALAR_TYPE& initialValue) : x(initialValue), y(initialValue), z(initialValue), w(initialValue) {}
-		Vector4(const SCALAR_TYPE& _x, const SCALAR_TYPE& _y, const SCALAR_TYPE& _z, const SCALAR_TYPE& _w) : x(_x), y(_y), z(_z), w(_w) {}
-
-		SCALAR_TYPE& operator[](int index)
-		{
-			HNY_ASSERT(index < 4, "Index out of range for Vector4");
-			return values[index];
-		}
-
-		const SCALAR_TYPE& operator[](int index) const
-		{
-			HNY_ASSERT(index < 4, "Index out of range for Vector4");
-			return values[index];
-		}
-
-		SCALAR_TYPE Magnitude() { return SDL_sqrtf(x * x + y * y + z * z + w * w); }
-
-		Vector4	operator*(const SCALAR_TYPE& s)
-		{
-			return Vector4(x * s, y * s, z *s, w * s);
-		}
+		VECTOR_OP_IMPL(4)
 	};
 
 	/// <summary>
@@ -117,28 +152,110 @@ namespace harmony
 	{
 		union
 		{
-			Vector2		columns[2];
+			Vector2				columns[2];
 			SCALAR_TYPE			values[4];
 		};
+
+		const Vector2& operator[](int index) const
+		{
+			HNY_ASSERT(index < 2, "Index out of range for Vector##VEC_DIM"); 
+			return columns[index]; 
+		}
+
+		Matrix2x2 operator*(const SCALAR_TYPE& s)
+		{
+			Matrix2x2 _ret = *this;
+			
+			for (auto n = 0; n < 4; n++)
+			{
+				_ret.values[n] *= s; 
+			}
+				return _ret; 
+		}
+			
+		Matrix2x2& operator*=(const SCALAR_TYPE& s)
+		{
+			for (auto n = 0; n < 4; n++)
+			{
+				values[n] *= s; 
+			}
+			return (*this); 
+		}
+
+		Matrix2x2 operator*(const Matrix2x2& s)
+		{
+			Matrix2x2 _ret{};
+
+
+			for (auto c = 0; c < 2; c++)
+			{
+				for (auto r = 0; r < 2; r++)
+				{
+					_ret.columns[c][r] = 
+						
+						columns[c][r] * s.columns[r][c] + 
+						columns[1][0] * s.columns[0][1];
+					
+				}
+			}
+			return _ret;
+		}
+
+		Matrix2x2& operator*=(const Matrix2x2& s)
+		{
+			for (auto c = 0; c < 2; c++)
+			{
+				for (auto r = 0; r < 2; r++)
+				{
+					columns[c][r] *= s[r][c];
+				}
+			}
+			return (*this);
+		}
+
+		Matrix2x2 operator+(const SCALAR_TYPE& s)
+		{
+			Matrix2x2 _ret = *this;
+
+			for (auto n = 0; n < 4; n++)
+			{
+				_ret.values[n] += s;
+			}
+			return _ret;
+		}
+
+		Matrix2x2& operator+=(const SCALAR_TYPE& s)
+		{
+			for (auto n = 0; n < 4; n++)
+			{
+				values[n] += s;
+			}
+			return (*this);
+		}
+
+		Matrix2x2 operator-(const SCALAR_TYPE& s)
+		{
+			Matrix2x2 _ret = *this;
+
+			for (auto n = 0; n < 4; n++)
+			{
+				_ret.values[n] -= s;
+			}
+			return _ret;
+		}
+
+		Matrix2x2& operator-=(const SCALAR_TYPE& s)
+		{
+			for (auto n = 0; n < 4; n++)
+			{
+				values[n] -= s;
+			}
+			return (*this);
+		}
+
+
+
 	};
-
-	//struct Matrix3x3
-	//{
-	//	union
-	//	{
-	//		Vector3		columns[3];
-	//		SCALAR_TYPE			values[9];
-	//	};
-	//};
-
-	//struct Matrix4x4
-	//{
-	//	union
-	//	{
-	//		Vector4		columns[4];
-	//		SCALAR_TYPE			values[16];
-	//	};
-	//};
 
 	// what ops do we need
 	// all vecs, addition, subtraction, multiplication, division

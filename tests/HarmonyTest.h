@@ -39,7 +39,7 @@ struct TestResult {
 
 #define STRINGIZE_DETAIL(x) #x
 #define STRINGIZE(x) STRINGIZE_DETAIL(x)
-#define FLOATING_POINT_ROUGHLY_EQUAL(x, y) abs(x) - abs(y) <= FLT_EPSILON
+#define FLOATING_POINT_ROUGHLY_EQUAL(x, y) abs(abs(x) - abs(y)) <= FLT_EPSILON
 
 #define TEST_ASSERT(cond, message, ...)                                                     \
   if (!(cond)) {                                                                            \
