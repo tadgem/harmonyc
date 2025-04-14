@@ -143,6 +143,21 @@ namespace harmony
 			return columns[index]; 
 		}
 
+		auto Transpose()
+		{
+			matrix_t<_ScalarType, _Rows, _Cols> result{};
+
+			for (int column = 0; column < _Cols; column++)
+			{
+				for (int row = 0; row < _Rows; row++)
+				{
+					result[row][column] = columns[column][row];
+				}
+			}
+
+			return result;
+		}
+
 		auto operator*(const f32& s)
 		{
 			auto _ret = *this;

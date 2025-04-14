@@ -307,6 +307,20 @@ TestResult Matrix2x2Multiplication(Engine* e)
 	return TestResult::Pass();
 }
 
+TestResult Matrix2x2Transpose(Engine* e)
+{
+	Matrix2x2 a{ 1,3,2,4 };
+	Matrix2x2 c = a.Transpose();
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][0], 1) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][1], 2) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][0], 3) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][1], 4)
+		, "Matrix2x2 Transpose Failed.");
+
+	return TestResult::Pass();
+}
+
 TestResult Matrix3x3ElementAccess(Engine* e)
 {
 	Matrix3x3 a{ 1,4,7,2,5,8,3,6,9 };
@@ -343,6 +357,27 @@ TestResult Matrix3x3Multiplication(Engine* e)
 		FLOATING_POINT_ROUGHLY_EQUAL(c[2][1], 111) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[2][2], 174)
 		, "Matrix3x3 multiplication Failed.");
+
+	return TestResult::Pass();
+}
+
+
+TestResult Matrix3x3Transpose(Engine* e)
+{
+	Matrix3x3 a{ 1,4,7,2,5,8,3,6,9 };
+	Matrix3x3 c = a.Transpose();
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][0], 1) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][1], 2) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][2], 3) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][0], 4) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][1], 5) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][2], 6) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[2][0], 7) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[2][1], 8) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[2][2], 9)
+		, "Matrix3x3 Transpose Failed.");
 
 	return TestResult::Pass();
 }
@@ -401,6 +436,33 @@ TestResult Matrix4x4Multiplication(Engine* e)
 	return TestResult::Pass();
 }
 
+TestResult Matrix4x4Transpose(Engine* e)
+{
+	Matrix4x4 a{ 1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16 };
+	auto c = a.Transpose();
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][0], 1) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][1], 2) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][2], 3) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[0][3], 4) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][0], 5) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][1], 6) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][2], 7) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[1][3], 8) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[2][0], 9) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[2][1], 10) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[2][2], 11) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[2][3], 12) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[3][0], 13) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[3][1], 14) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[3][2], 15) &&
+		FLOATING_POINT_ROUGHLY_EQUAL(c[3][3], 16)
+		, "Matrix4x4 Transpose Failed.");
+
+	return TestResult::Pass();
+}
+
 
 TEST_APP_BEGIN_SUITE("Maths", MEGABYTES(32))
 // Vector Tests
@@ -430,8 +492,11 @@ TEST_APP_BEGIN_SUITE("Maths", MEGABYTES(32))
 
 ADD_TEST(Matrix2x2ElementAccess)
 ADD_TEST(Matrix2x2Multiplication)
+ADD_TEST(Matrix2x2Transpose)
 ADD_TEST(Matrix3x3ElementAccess)
 ADD_TEST(Matrix3x3Multiplication)
+ADD_TEST(Matrix3x3Transpose)
 ADD_TEST(Matrix4x4ElementAccess)
 ADD_TEST(Matrix4x4Multiplication)
+ADD_TEST(Matrix4x4Transpose)
 TEST_APP_END_SUITE()
