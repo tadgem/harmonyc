@@ -3,259 +3,239 @@
 #include "Macros.h"
 #include "SDL3/SDL.h"
 
-#define SCALAR_TYPE f32
-
-#define VECTOR_OP_IMPL(VEC_DIM) \
-SCALAR_TYPE& operator[](int index)\
-{\
-	HNY_ASSERT(index < ##VEC_DIM, "Index out of range for Vector##VEC_DIM");\
-	return values[index];\
-}\
-\
-const SCALAR_TYPE& operator[](int index) const\
-{\
-	HNY_ASSERT(index < ##VEC_DIM, "Index out of range for Vector##VEC_DIM");\
-	return values[index];\
-}\
-\
-SCALAR_TYPE Magnitude() {\
-	SCALAR_TYPE _sqr_val = 0.0;\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		_sqr_val += values[n] * values[n];\
-	}\
-	return SDL_sqrtf(_sqr_val);\
-}\
-\
-Vector##VEC_DIM	operator*(const SCALAR_TYPE& s)\
-{\
-	Vector##VEC_DIM _ret = *this;\
-	\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		_ret[n] *= s;\
-	}\
-	return _ret;\
-}\
-\
-Vector##VEC_DIM& operator*=(const SCALAR_TYPE& s)\
-{\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		values[n] *= s;\
-	}\
-	return (*this);\
-}\
-\
-Vector##VEC_DIM	operator*(const Vector##VEC_DIM& s)\
-{\
-	Vector##VEC_DIM _ret = *this;\
-		\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		_ret[n] *= s[n];\
-	}\
-	return _ret;\
-}\
-\
-Vector##VEC_DIM& operator*=(const Vector##VEC_DIM& s)\
-{\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		values[n] *= s[n];\
-	}\
-	return (*this);\
-}\
-Vector##VEC_DIM	operator+(const Vector##VEC_DIM& s)\
-{\
-	Vector##VEC_DIM _ret = *this;\
-		\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		_ret[n] += s[n];\
-	}\
-	return _ret;\
-}\
-Vector##VEC_DIM& operator+=(const Vector##VEC_DIM& s)\
-{\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		values[n] += s[n];\
-	}\
-	return (*this);\
-}\
-Vector##VEC_DIM	operator-(const Vector##VEC_DIM& s)\
-{\
-	Vector##VEC_DIM _ret = *this;\
-		\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		_ret[n] -= s[n];\
-	}\
-	return _ret;\
-}\
-Vector##VEC_DIM& operator-=(const Vector##VEC_DIM& s)\
-{\
-	for (auto n = 0; n < ##VEC_DIM; n++)\
-	{\
-		values[n] -= s[n];\
-	}\
-	return (*this);\
-}\
-
 namespace harmony
 {
-
-	/// <summary>
-	/// Vector Definitions
-	/// </summary>
-	struct Vector2
+	template<typename _ScalarType, size_t _Dim>
+	struct vector_t
 	{
-		union {
-			struct {
-				SCALAR_TYPE x, y;
-			};
-			SCALAR_TYPE values[2];
-		};
-		VECTOR_OP_IMPL(2)
+		_ScalarType values[_Dim];
+		
+		_ScalarType& operator[](int index)
+		{
+			HNY_ASSERT(index < _Dim, "Index out of range for Vector");
+			return values[index]; 
+		}
+			
+		const _ScalarType& operator[](int index) const
+		{
+			HNY_ASSERT(index < _Dim, "Index out of range for Vector"); 
+			return values[index]; 
+		}
+
+		_ScalarType Magnitude() {
+			
+			_ScalarType _sqr_val = 0.0;
+			for (auto n = 0; n < _Dim; n++)
+			{
+				_sqr_val += values[n] * values[n];
+			}
+			return SDL_sqrtf(_sqr_val);
+		}
+
+		auto operator*(const _ScalarType& s)
+		{
+			auto _ret = *this; 
+			
+			for (auto n = 0; n < _Dim; n++)
+			{
+				_ret[n] *= s;
+			}
+			return _ret;
+		}
+		
+		vector_t<_ScalarType, _Dim>& operator*=(const _ScalarType& s)
+		{
+			for (auto n = 0; n < _Dim; n++)
+			{
+				values[n] *= s;
+			}
+			return (*this);
+		}
+
+		vector_t<_ScalarType, _Dim> operator*(const vector_t<_ScalarType, _Dim>& s)
+		{
+			vector_t<_ScalarType, _Dim> _ret = *this; 
+			
+			for (auto n = 0; n < _Dim; n++)
+			{
+				_ret[n] *= s[n]; 
+			}
+			return _ret; 
+		}
+			
+		vector_t<_ScalarType, _Dim>& operator*=(const vector_t<_ScalarType, _Dim>& s)
+		{
+			for (auto n = 0; n < _Dim; n++)
+			{
+				values[n] *= s[n];
+			}
+			return (*this);
+		}
+
+		vector_t<_ScalarType, _Dim> operator+(const vector_t<_ScalarType, _Dim>& s)
+		{
+			vector_t<_ScalarType, _Dim> _ret = *this;
+
+			for (auto n = 0; n < _Dim; n++)
+			{
+				_ret[n] += s[n];
+			}
+			return _ret;
+		}
+
+		vector_t<_ScalarType, _Dim>& operator+=(const vector_t<_ScalarType, _Dim>& s)
+		{
+			for (auto n = 0; n < _Dim; n++)
+			{
+				values[n] += s[n];
+			}
+			return (*this);
+		}
+
+		vector_t<_ScalarType, _Dim> operator-(const vector_t<_ScalarType, _Dim>& s)
+		{
+			vector_t<_ScalarType, _Dim> _ret = *this;
+
+			for (auto n = 0; n < _Dim; n++)
+			{
+				_ret[n] -= s[n];
+			}
+			return _ret;
+		}
+
+		vector_t<_ScalarType, _Dim>& operator-=(const vector_t<_ScalarType, _Dim>& s)
+		{
+			for (auto n = 0; n < _Dim; n++)
+			{
+				values[n] -= s[n];
+			}
+			return (*this);
+		}
+
 	};
 
-	struct Vector3
-	{
-		union {
-			struct {
-				SCALAR_TYPE x, y, z;
-			};
-			SCALAR_TYPE values[3];
-		};
+	typedef vector_t<f32, 2> Vector2;
+	typedef vector_t<f32, 3> Vector3;
+	typedef vector_t<f32, 4> Vector4;
 
-		VECTOR_OP_IMPL(3)
-	};
-
-
-	struct Vector4
-	{
-		union {
-			struct {
-				SCALAR_TYPE x, y, z, w;
-			};
-			SCALAR_TYPE values[4];
-		};
-
-		VECTOR_OP_IMPL(4)
-	};
 
 	/// <summary>
 	/// Matrix Definitions (Column Major)
 	/// </summary>
-	struct Matrix2x2
+	template<typename _ScalarType, size_t _Cols, size_t _Rows>
+	struct matrix_t
 	{
 		union
 		{
-			Vector2				columns[2];
-			SCALAR_TYPE			values[4];
+			vector_t<_ScalarType, _Rows>	columns[_Cols];
+			_ScalarType						values[_Rows*_Cols];
 		};
 
-		const Vector2& operator[](int index) const
+		vector_t<_ScalarType, _Rows>& operator[](int index)
 		{
-			HNY_ASSERT(index < 2, "Index out of range for Vector##VEC_DIM"); 
+			HNY_ASSERT(index < _Cols, "Index out of range for Vector##VEC_DIM");
+			return columns[index];
+		}
+
+		const vector_t<_ScalarType, _Rows>& operator[](int index) const
+		{
+			HNY_ASSERT(index < _Cols, "Index out of range for Vector##VEC_DIM"); 
 			return columns[index]; 
 		}
 
-		Matrix2x2 operator*(const SCALAR_TYPE& s)
+		auto operator*(const f32& s)
 		{
-			Matrix2x2 _ret = *this;
+			auto _ret = *this;
 			
-			for (auto n = 0; n < 4; n++)
+			for (auto n = 0; n < _Cols*_Rows; n++)
 			{
 				_ret.values[n] *= s; 
 			}
 				return _ret; 
 		}
 			
-		Matrix2x2& operator*=(const SCALAR_TYPE& s)
+		auto & operator*=(const f32& s)
 		{
-			for (auto n = 0; n < 4; n++)
+			for (auto n = 0; n < _Cols*_Rows; n++)
 			{
 				values[n] *= s; 
 			}
 			return (*this); 
 		}
 
-		Matrix2x2 operator*(const Matrix2x2& s)
-		{
-			Matrix2x2 _ret{};
+		template<size_t _OtherCols, size_t _OtherRows>
+		auto operator*(const matrix_t<_ScalarType, _OtherCols, _OtherRows>& s)
+		{			
+			HNY_ASSERT(_Cols == _OtherRows, "Matrix cannot be multiplied, LHS.ColumnCount != RHS.RowCount");
 
+			matrix_t<_ScalarType, _Cols, _OtherRows> result = {};
 
-			for (auto c = 0; c < 2; c++)
+			for (int column = 0; column < _Cols; column++)
 			{
-				for (auto r = 0; r < 2; r++)
+				for (int row = 0; row < _OtherRows; row++)
 				{
-					_ret.columns[c][r] = 
-						
-						columns[c][r] * s.columns[r][c] + 
-						columns[1][0] * s.columns[0][1];
-					
+					f32 add_v = 0.0;
+					for (int add = 0; add < _Cols; add++)
+					{
+						// add the add'th element of the LHS current column * RHS current row
+						add_v += columns[add][row] * s.columns[column][add];
+					}
+
+					result[column][row] = add_v;
 				}
 			}
-			return _ret;
+
+			return result;
+
+
 		}
 
-		Matrix2x2& operator*=(const Matrix2x2& s)
-		{
-			for (auto c = 0; c < 2; c++)
-			{
-				for (auto r = 0; r < 2; r++)
-				{
-					columns[c][r] *= s[r][c];
-				}
-			}
-			return (*this);
-		}
 
-		Matrix2x2 operator+(const SCALAR_TYPE& s)
+		auto operator+(const f32& s)
 		{
-			Matrix2x2 _ret = *this;
+			auto _ret = *this;
 
-			for (auto n = 0; n < 4; n++)
+			for (auto n = 0; n < _Cols * _Rows; n++)
 			{
 				_ret.values[n] += s;
 			}
 			return _ret;
 		}
 
-		Matrix2x2& operator+=(const SCALAR_TYPE& s)
+		auto& operator+=(const f32& s)
 		{
-			for (auto n = 0; n < 4; n++)
+			for (auto n = 0; n < _Cols * _Rows; n++)
 			{
 				values[n] += s;
 			}
 			return (*this);
 		}
 
-		Matrix2x2 operator-(const SCALAR_TYPE& s)
+		auto operator-(const f32& s)
 		{
-			Matrix2x2 _ret = *this;
+			auto _ret = *this;
 
-			for (auto n = 0; n < 4; n++)
+			for (auto n = 0; n < _Cols * _Rows; n++)
 			{
 				_ret.values[n] -= s;
 			}
 			return _ret;
 		}
 
-		Matrix2x2& operator-=(const SCALAR_TYPE& s)
+		auto& operator-=(const f32& s)
 		{
-			for (auto n = 0; n < 4; n++)
+			for (auto n = 0; n < _Cols * _Rows; n++)
 			{
 				values[n] -= s;
 			}
 			return (*this);
 		}
-
-
-
 	};
+
+	typedef matrix_t<f32, 2, 2> Matrix2x2;
+	typedef matrix_t<f32, 3, 3> Matrix3x3;
+	typedef matrix_t<f32, 4, 4> Matrix4x4;
+
 
 	// what ops do we need
 	// all vecs, addition, subtraction, multiplication, division
