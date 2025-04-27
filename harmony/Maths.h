@@ -5,6 +5,49 @@
 
 namespace harmony
 {
+	template<typename _ScalarType>
+	_ScalarType Abs(const _ScalarType& n)
+	{
+		return n < 0 ? -n : n;
+	}
+
+	template<typename _ScalarType>
+	_ScalarType Sqrt(const _ScalarType& n)
+	{
+		HNY_ASSERT(n >= 0.0, "Cannot find square root of a negative or zero number");
+		const int MAX_SQRT_ITERATIONS = 20;
+		const _ScalarType ACCEPTABLE_DIFFERENCE = 0.00001;
+		if (n == 0.0) { 
+			return 0.0;
+		};
+
+		_ScalarType high = n;
+		_ScalarType low = 0.0;
+		_ScalarType guess = n / 2.0;
+
+		while (Abs((guess * guess) - n) > ACCEPTABLE_DIFFERENCE)
+		{
+			if (guess * guess > n)
+			{
+				high = guess;
+			}
+			else {
+				low = guess;
+			}
+			_ScalarType new_guess = (high + low) / 2.0;
+			
+			// getting stuck in an infinite loop
+			if (new_guess == guess)
+			{
+				break;
+			}
+
+			guess = new_guess;
+		}
+
+		return guess;
+	}
+
 	template<typename _ScalarType, size_t _Dim>
 	struct vector_t
 	{
@@ -30,6 +73,24 @@ namespace harmony
 				_sqr_val += values[n] * values[n];
 			}
 			return SDL_sqrtf(_sqr_val);
+		}
+
+		_ScalarType Dot(const vector_t<_ScalarType, _Dim>& other)
+		{
+			_ScalarType ret = 0.0;
+			
+			for (int i = 0; i < _Dim; i++)
+			{
+				ret += values[i] * other.values[i];
+			}
+
+			return ret;
+		}
+
+		_ScalarType DegreesBetween(const vector_t<_ScalarType, _Dim>& other)
+		{
+			auto dot = Dot(other);
+			return std::acos(dot);
 		}
 
 		auto operator*(const _ScalarType& s)

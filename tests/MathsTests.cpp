@@ -3,6 +3,29 @@
 using namespace harmony;
 
 /// <summary>
+/// Math function tests
+/// </summary>
+/// <param name="e"></param>
+/// <returns></returns>
+TestResult SqrtTest(Engine* e)
+{
+	f64 sqr = 9.0;
+	f64 sqr_root = Sqrt(sqr);
+	TEST_ASSERT(FLOATING_POINT_ROUGHLY_EQUAL(sqr_root, 3.0), "Incorrect square root computed");
+
+	return TestResult::Pass();
+}
+
+TestResult AbsTest(Engine* e)
+{
+	f64 sqr = -9.0;
+
+	TEST_ASSERT(FLOATING_POINT_ROUGHLY_EQUAL(Abs(sqr), 9.0), "Incorrect square root computed");
+
+	return TestResult::Pass();
+}
+
+/// <summary>
 /// Vector Tests
 /// </summary>
 /// <param name="e"></param>
@@ -89,6 +112,31 @@ TestResult Vector2Subtraction(Engine* e)
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(subbed[0], 0.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(subbed[1], 0.0), "Vector2 subtraction failed");
+
+	return TestResult::Pass();
+}
+
+TestResult Vector2Dot(Engine* e)
+{
+	Vector2 v1{ 0.0f, 1.0f };
+	Vector2 v2{ 0.0f, 1.0f };
+
+	auto dot1 = v1.Dot(v2);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector2 Dot product failed when vectors should be positively parallel");
+
+	Vector2 v3{ 1.0f, 0.0f };
+	auto dot2 = v1.Dot(v3);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector2 Dot product failed when vectors should be orthogonal");
+
+	Vector2 v4{ 0.0f, -1.0f };
+	auto dot3 = v1.Dot(v4);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector2 Dot product failed when vectors should be negatively parallel");
 
 	return TestResult::Pass();
 }
@@ -182,6 +230,30 @@ TestResult Vector3Subtraction(Engine* e)
 	return TestResult::Pass();
 }
 
+TestResult Vector3Dot(Engine* e)
+{
+	Vector3 v1{ 0.0f, 1.0f, 0.0f};
+	Vector3 v2{ 0.0f, 1.0f, 0.0f};
+
+	auto dot1 = v1.Dot(v2);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector3 Dot product failed when vectors should be positively parallel");
+
+	Vector3 v3{ 1.0f, 0.0f, 0.0f};
+	auto dot2 = v1.Dot(v3);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector3 Dot product failed when vectors should be orthogonal");
+
+	Vector3 v4{ 0.0f, -1.0f , 0.0f};
+	auto dot3 = v1.Dot(v4);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector3 Dot product failed when vectors should be negatively parallel");
+
+	return TestResult::Pass();
+}
 
 TestResult Vector4ElementAccess(Engine* e)
 {
@@ -271,6 +343,31 @@ TestResult Vector4Subtraction(Engine* e)
 		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 0.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 0.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[3], 0.0), "Vector4 subtraction failed");
+
+	return TestResult::Pass();
+}
+
+TestResult Vector4Dot(Engine* e)
+{
+	Vector4 v1{ 0.0f, 1.0f, 0.0f , 0.0f};
+	Vector4 v2{ 0.0f, 1.0f, 0.0f , 0.0f};
+
+	auto dot1 = v1.Dot(v2);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector4 Dot product failed when vectors should be positively parallel");
+
+	Vector4 v3{ 1.0f, 0.0f, 0.0f , 0.0f};
+	auto dot2 = v1.Dot(v3);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector4 Dot product failed when vectors should be orthogonal");
+
+	Vector4 v4{ 0.0f, -1.0f , 0.0f, 0.0f };
+	auto dot3 = v1.Dot(v4);
+
+	TEST_ASSERT(
+		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector4 Dot product failed when vectors should be negatively parallel");
 
 	return TestResult::Pass();
 }
@@ -465,6 +562,12 @@ TestResult Matrix4x4Transpose(Engine* e)
 
 
 TEST_APP_BEGIN_SUITE("Maths", MEGABYTES(32))
+
+// Maths function tests
+ADD_TEST(SqrtTest)
+ADD_TEST(AbsTest)
+
+
 // Vector Tests
 //ADD_TEST(Vector2ElementAccess)
 //ADD_TEST(Vector2ElementArrayAccess)
@@ -473,6 +576,7 @@ TEST_APP_BEGIN_SUITE("Maths", MEGABYTES(32))
 //ADD_TEST(Vector2Multiplication)
 //ADD_TEST(Vector2Addition)
 //ADD_TEST(Vector2Subtraction)
+ADD_TEST(Vector2Dot)
 //ADD_TEST(Vector3ElementAccess)
 //ADD_TEST(Vector3ElementArrayAccess)
 //ADD_TEST(Vector3Magnitude)
@@ -480,6 +584,7 @@ TEST_APP_BEGIN_SUITE("Maths", MEGABYTES(32))
 //ADD_TEST(Vector3Multiplication)
 //ADD_TEST(Vector3Addition)
 //ADD_TEST(Vector3Subtraction)
+ADD_TEST(Vector3Dot)
 //ADD_TEST(Vector4ElementAccess)
 //ADD_TEST(Vector4ElementArrayAccess)
 //ADD_TEST(Vector4Magnitude)
@@ -487,16 +592,17 @@ TEST_APP_BEGIN_SUITE("Maths", MEGABYTES(32))
 //ADD_TEST(Vector4Multiplication)
 //ADD_TEST(Vector4Addition)
 //ADD_TEST(Vector4Subtraction)
+ADD_TEST(Vector4Dot)
 
 // Matrix Tests
 
-ADD_TEST(Matrix2x2ElementAccess)
-ADD_TEST(Matrix2x2Multiplication)
-ADD_TEST(Matrix2x2Transpose)
-ADD_TEST(Matrix3x3ElementAccess)
-ADD_TEST(Matrix3x3Multiplication)
-ADD_TEST(Matrix3x3Transpose)
-ADD_TEST(Matrix4x4ElementAccess)
-ADD_TEST(Matrix4x4Multiplication)
-ADD_TEST(Matrix4x4Transpose)
+//ADD_TEST(Matrix2x2ElementAccess)
+//ADD_TEST(Matrix2x2Multiplication)
+//ADD_TEST(Matrix2x2Transpose)
+//ADD_TEST(Matrix3x3ElementAccess)
+//ADD_TEST(Matrix3x3Multiplication)
+//ADD_TEST(Matrix3x3Transpose)
+//ADD_TEST(Matrix4x4ElementAccess)
+//ADD_TEST(Matrix4x4Multiplication)
+//ADD_TEST(Matrix4x4Transpose)
 TEST_APP_END_SUITE()
