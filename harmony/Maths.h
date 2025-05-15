@@ -75,6 +75,27 @@ namespace harmony
 			return SDL_sqrtf(_sqr_val);
 		}
 
+                void Normalize()
+                {
+                  auto mag = Magnitude();
+                  for(auto i = 0; i < _Dim; i++)
+                  {
+                    values[i] /= mag;
+                  }
+                }
+
+                vector_t<_ScalarType, _Dim> Normalized()
+                {
+                  auto mag = Magnitude();
+                  vector_t<_ScalarType, _Dim> v {};
+
+                  for(auto i = 0; i < _Dim; i++)
+                  {
+                    v[i] = values[i] / mag;
+                  }
+                  return v;
+                }
+
 		_ScalarType Dot(const vector_t<_ScalarType, _Dim>& other)
 		{
 			_ScalarType ret = 0.0;
@@ -312,9 +333,64 @@ namespace harmony
 	typedef matrix_t<f32, 3, 3> Matrix3x3;
 	typedef matrix_t<f32, 4, 4> Matrix4x4;
 
+        template<typename _ScalarType>
+        matrix_t<_ScalarType, 4, 4> Translate(vector_t<_ScalarType, 3> t)
+        {
+          return matrix_t<_ScalarType, 4,4> {
+            { 1,  0,  0,  t.x },
+            { 0,  1,  0,  t.y },
+            { 0,  0,  1,  t.z },
+            { 0,  0,  0,  1   }
+          };
+        }
 
-	// what ops do we need
-	// all vecs, addition, subtraction, multiplication, division
-	// matrices, multiplication, inversion, matrix_cast (e.g. 4x4 -> 3x3)
+        template<typename _ScalarType>
+        matrix_t<_ScalarType, 4,4> Scale(vector_t<_ScalarType, 3> s)
+        {
+          return matrix_t<_ScalarType, 4,4>
+          {
+            { s.x,  0.0,  0.0,  0.0},
+            { 0.0,  s.y,  0.0,  0.0},
+            { 0.0,  0.0,  s.z,  0.0},
+            { 0.0,  0.0,  0.0,  1.0}
+          };
+        }
+
+        // see https://registry.khronos.org/OpenGL-Refpages/gl2.1/
+        template<typename _ScalarType>
+        matrix_t<_ScalarType, 4, 4> Rotate(_ScalarType deg, vector_t<_ScalarType, 3> axis)
+        {
+          const _ScalarType c = cos(deg);
+          const _ScalarType s = sin(deg);
+
+          if(axis.Magnitude() > 1.0)
+          {
+            axis.Normalize();
+          }
+
+          const _ScalarType oneMinusC = 1.0 - c;
+          const _ScalarType xs = axis.x * s;
+          const _ScalarType ys = axis.y * s;
+          const _ScalarType zs = axis.z * s;
+
+          const _ScalarType _00 = axis.x * axis.x * oneMinusC + c;
+          const _ScalarType _10 = axis.x * axis.y * oneMinusC - zs;
+          const _ScalarType _20 = axis.x * axis.z * oneMinusC + ys;
+
+          const _ScalarType _01 = axis.y * axis.x * oneMinusC + zs;
+          const _ScalarType _11 = axis.y * axis.y * oneMinusC + c;
+          const _ScalarType _21 = axis.y * axis.z * oneMinusC - xs;
+
+          const _ScalarType _02 = axis.x * axis.z * oneMinusC - ys;
+          const _ScalarType _12 = axis.y * axis.z * oneMinusC + xs;
+          const _ScalarType _22 = axis.z * axis.z * oneMinusC + c;
+
+          return matrix_t<_ScalarType, 4,4> {
+              { _00 , _10, _20,  0.0 },
+              { _01,  _11, _21,  0.0 },
+              { _02,  _12, _22,  0.0 },
+              { 0.0,  0.0, 0.0,  1.0 }
+          };
+        }
 
 }
