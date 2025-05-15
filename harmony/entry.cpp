@@ -25,8 +25,9 @@ void OnImGui(harmony::Engine &e) {
 
 int main() {
   using namespace harmony;
-
-  Engine engine = Engine::Init(1920, 1080, false, GIGABYTES(4), false);
+  bool enableSwapchainMSAA = false;
+  bool enableVulkanValidation = false;
+  Engine engine = Engine::Init(1920, 1080, enableSwapchainMSAA, GIGABYTES(4), enableVulkanValidation);
 
   AssetHandle sh{};
   String someString = "Hello";

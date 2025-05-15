@@ -57,7 +57,7 @@ Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA, uint64 upfrontMemory, b
   HNY_LOG_INFO("Allocated Engine Memory : %llu MB\n", upfrontMemory / (MEGABYTES(1)));
 
   lvk::VkState* vk			= HNY_NEW(lvk::VkState, lvk::init::Create<lvk::VkSDL, mimalloc_allocator_lvk>("Harmony Engine", w, h, enableMSAA, enableValidation));
-  lvk::LvkIm3dState* im3d	= HNY_NEW(lvk::LvkIm3dState, lvk::LoadIm3D(*vk));
+  lvk::LvkIm3dState* im3d	        = HNY_NEW(lvk::LvkIm3dState, lvk::LoadIm3D(*vk));
   AssetManager* am			= HNY_NEW(AssetManager);
 
   return Engine{
@@ -69,21 +69,20 @@ Engine Engine::Init(uint32 w, uint32 h, bool enableMSAA, uint64 upfrontMemory, b
   };
 }
 
-bool Engine::ShouldRun() { return mVK->m_Backend->ShouldRun(*mVK); }
+bool Engine::ShouldRun() const { return mVK->m_Backend->ShouldRun(*mVK); }
 
-void Engine::PreFrame() {
+void Engine::PreFrame() const {
   mVK->m_Backend->PreFrame(*mVK);
   Im3d::NewFrame();
 }
 
-void Engine::EndFrame() {
+void Engine::EndFrame() const {
   Im3d::EndFrame();
   mVK->m_Backend->PostFrame(*mVK);
 }
 void Engine::Shutdown()
 {
-	
-	lvk::FreeIm3d(*mVK, *mIm3D);
+        lvk::FreeIm3d(*mVK, *mIm3D);
 	// TODO: Why does closing the window cause Vulkan Validation Layers
 	// to throw an exception?!
 	lvk::init::Cleanup(*mVK);

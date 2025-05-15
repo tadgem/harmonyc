@@ -14,6 +14,3 @@ typedef int64 str_hash;
 
 typedef float f32;
 typedef double f64;
-
-#define UINT64_MAX 0xFFFFFFFFFFFFFFFFULL
-#define INT64_MAX 9223372036854775807LL
