@@ -458,7 +458,6 @@ TestResult Matrix3x3Multiplication(Engine* e)
 	return TestResult::Pass();
 }
 
-
 TestResult Matrix3x3Transpose(Engine* e)
 {
 	Matrix3x3 a{ 1,4,7,2,5,8,3,6,9 };
@@ -560,6 +559,14 @@ TestResult Matrix4x4Transpose(Engine* e)
 	return TestResult::Pass();
 }
 
+TestResult TranslationMatrixTest(Engine* e)
+{
+  Vector3 pos = {1.0, 2.0, 3.0};
+  Vector3T p2 = {1.0, 2.0, 3.0};
+  p2.x;
+  return TestResult::Pass();
+}
+
 
 TEST_APP_BEGIN_SUITE("Maths", MEGABYTES(32))
 
@@ -605,4 +612,6 @@ ADD_TEST(Vector4Dot)
 //ADD_TEST(Matrix4x4ElementAccess)
 //ADD_TEST(Matrix4x4Multiplication)
 //ADD_TEST(Matrix4x4Transpose)
+
+// Transformation Tests
 TEST_APP_END_SUITE()

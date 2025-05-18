@@ -13,6 +13,7 @@ bool AssetManager::ProvideAssetTypeLoadFunction(const AssetType &type,
   Pair<LoadAssetCallback, UnloadAssetCallback> funcs{onLoad, onUnload};
 
   pAssetTypeLoadFuncs[type] = funcs;
+  return true;
 }
 
 AssetHandle AssetManager::LoadAsset(const String &path,

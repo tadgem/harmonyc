@@ -3,6 +3,146 @@
 #include "Macros.h"
 #include "SDL3/SDL.h"
 
+#define VECTOR_IMPL (VECTOR_TYPE_NAME, SCALAR_TYPE, DIMS) \
+SCALAR_TYPE& operator[](int index)\
+    {\
+      HNY_ASSERT(index < DIMS, "Index out of range for VECTOR_TYPE_NAME");\
+      return values[index];\
+    }\
+    \
+    const SCALAR_TYPE& operator[](int index) const\
+    {\
+      HNY_ASSERT(index < DIMS, "Index out of range for VECTOR_TYPE_NAME");\
+      return values[index];\
+    }\
+    \
+    SCALAR_TYPE Magnitude() {\
+      SCALAR_TYPE _sqr_val = 0.0;\
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        _sqr_val += values[n] * values[n];\
+      }\
+      return SDL_sqrtf(_sqr_val);\
+    }\
+    \
+    void Normalize()\
+    {\
+      auto mag = Magnitude();\
+      for(auto i = 0; i < DIMS; i++)\
+      {\
+        values[i] /= mag;\
+      }\
+    }\
+    \
+    VECTOR_TYPE_NAME Normalized()\
+    {\
+      auto mag = Magnitude();\
+      VECTOR_TYPE_NAME v {};\
+    \
+      for(auto i = 0; i < DIMS; i++)\
+      {\
+        v[i] = values[i] / mag;\
+      }\
+      return v;\
+    }\
+    \
+    SCALAR_TYPE Dot(const VECTOR_TYPE_NAME& other)\
+    {\
+      SCALAR_TYPE ret = 0.0;\
+    \
+      for (int i = 0; i < DIMS; i++)\
+      {\
+        ret += values[i] * other.values[i];\
+      }\
+    \
+      return ret;\
+    }\
+    \
+    SCALAR_TYPE DegreesBetween(const VECTOR_TYPE_NAME& other)\
+    {\
+      auto dot = Dot(other);\
+      return std::acos(dot);\
+    }\
+    \
+    auto operator*(const SCALAR_TYPE& s)\
+    {\
+      auto _ret = *this;\
+      \
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        _ret[n] *= s;\
+      }\
+      return _ret;\
+    }\
+\
+    VECTOR_TYPE_NAME& operator*=(const SCALAR_TYPE& s)\
+    {\
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        values[n] *= s;\
+      }\
+      return (*this);\
+    }\
+\
+    VECTOR_TYPE_NAME operator*(const VECTOR_TYPE_NAME& s)\
+    {\
+      VECTOR_TYPE_NAME _ret = *this;\
+\
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        _ret[n] *= s[n];\
+      }\
+      return _ret;\
+    }\
+\
+    VECTOR_TYPE_NAME& operator*=(const VECTOR_TYPE_NAME& s)\
+    {\
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        values[n] *= s[n];\
+      }\
+      return (*this);\
+    }\
+\
+    VECTOR_TYPE_NAME operator+(const VECTOR_TYPE_NAME& s)\
+    {\
+      VECTOR_TYPE_NAME _ret = *this;\
+\
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        _ret[n] += s[n];\
+      }\
+      return _ret;\
+    }\
+\
+    VECTOR_TYPE_NAME& operator+=(const VECTOR_TYPE_NAME& s)\
+    {\
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        values[n] += s[n];\
+      }\
+      return (*this);\
+    }\
+\
+    VECTOR_TYPE_NAME operator-(const VECTOR_TYPE_NAME& s)\
+    {\
+      VECTOR_TYPE_NAME _ret = *this;\
+\
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        _ret[n] -= s[n];\
+      }\
+      return _ret;\
+    }\
+\
+    VECTOR_TYPE_NAME& operator-=(const VECTOR_TYPE_NAME& s)\
+    {\
+      for (auto n = 0; n < DIMS; n++)\
+      {\
+        values[n] -= s[n];\
+      }\
+      return (*this);\
+    }
 namespace harmony
 {
 	template<typename _ScalarType>
@@ -48,6 +188,168 @@ namespace harmony
 		return guess;
 	}
 
+
+        struct Vector3T
+        {
+          union
+          {
+            f32 values[3];
+            struct
+            {
+              f32 x, y, z;
+            };
+          };
+
+          (VECTOR_TYPE_NAME, SCALAR_TYPE, DIMS) SCALAR_TYPE &operator[](
+              int index) {
+            do {
+              while (!(index < DIMS &&
+                       "Index out of range for VECTOR_TYPE_NAME")) {
+                static struct SDL_AssertData sdl_assert_data = {
+                    0,
+                    0,
+                    "index < DIMS &&\"Index out of range for VECTOR_TYPE_NAME\"",
+                    0,
+                    0,
+                    0,
+                    0};
+                const SDL_AssertState sdl_assert_state = SDL_ReportAssertion(
+                    &sdl_assert_data, "_function_name_", "_file_name_", 203);
+                if (sdl_assert_state == SDL_ASSERTION_RETRY) {
+                  continue;
+                } else if (sdl_assert_state == SDL_ASSERTION_BREAK) {
+                  __debugbreak();
+                }
+                break;
+              }
+            } while ((0, 0));
+            return values[index];
+          }
+          const SCALAR_TYPE &operator[](int index) const {
+            do {
+              while (!(index < DIMS &&
+                       "Index out of range for VECTOR_TYPE_NAME")) {
+                static struct SDL_AssertData sdl_assert_data = {
+                    0,
+                    0,
+                    "index < DIMS &&\"Index out of range for VECTOR_TYPE_NAME\"",
+                    0,
+                    0,
+                    0,
+                    0};
+                const SDL_AssertState sdl_assert_state = SDL_ReportAssertion(
+                    &sdl_assert_data, "_function_name_", "_file_name_", 203);
+                if (sdl_assert_state == SDL_ASSERTION_RETRY) {
+                  continue;
+                } else if (sdl_assert_state == SDL_ASSERTION_BREAK) {
+                  __debugbreak();
+                }
+                break;
+              }
+            } while ((0, 0));
+            return values[index];
+          }
+          SCALAR_TYPE Magnitude() {
+            SCALAR_TYPE _sqr_val = 0.0;
+            for (auto n = 0; n < DIMS; n++) {
+              _sqr_val += values[n] * values[n];
+            }
+            return SDL_sqrtf(_sqr_val);
+          }
+          void Normalize() {
+            auto mag = Magnitude();
+            for (auto i = 0; i < DIMS; i++) {
+              values[i] /= mag;
+            }
+          }
+          VECTOR_TYPE_NAME Normalized() {
+            auto mag = Magnitude();
+            VECTOR_TYPE_NAME v{};
+            for (auto i = 0; i < DIMS; i++) {
+              v[i] = values[i] / mag;
+            }
+            return v;
+          }
+          SCALAR_TYPE Dot(const VECTOR_TYPE_NAME &other) {
+            SCALAR_TYPE ret = 0.0;
+            for (int i = 0; i < DIMS; i++) {
+              ret += values[i] * other.values[i];
+            }
+            return ret;
+          }
+          SCALAR_TYPE DegreesBetween(const VECTOR_TYPE_NAME &other) {
+            auto dot = Dot(other);
+            return std::acos(dot);
+          }
+          auto operator*(const SCALAR_TYPE &s) {
+            auto _ret = *this;
+            for (auto n = 0; n < DIMS; n++) {
+              _ret[n] *= s;
+            }
+            return _ret;
+          }
+          VECTOR_TYPE_NAME &operator*=(const SCALAR_TYPE &s) {
+            for (auto n = 0; n < DIMS; n++) {
+              values[n] *= s;
+            }
+            return (*this);
+          }
+          VECTOR_TYPE_NAME operator*(const VECTOR_TYPE_NAME &s) {
+            VECTOR_TYPE_NAME _ret = *this;
+            for (auto n = 0; n < DIMS; n++) {
+              _ret[n] *= s[n];
+            }
+            return _ret;
+          }
+          VECTOR_TYPE_NAME &operator*=(const VECTOR_TYPE_NAME &s) {
+            for (auto n = 0; n < DIMS; n++) {
+              values[n] *= s[n];
+            }
+            return (*this);
+          }
+          VECTOR_TYPE_NAME operator+(const VECTOR_TYPE_NAME &s) {
+            VECTOR_TYPE_NAME _ret = *this;
+            for (auto n = 0; n < DIMS; n++) {
+              _ret[n] += s[n];
+            }
+            return _ret;
+          }
+          VECTOR_TYPE_NAME &operator+=(const VECTOR_TYPE_NAME &s) {
+            for (auto n = 0; n < DIMS; n++) {
+              values[n] += s[n];
+            }
+            return (*this);
+          }
+          VECTOR_TYPE_NAME operator-(const VECTOR_TYPE_NAME &s) {
+            VECTOR_TYPE_NAME _ret = *this;
+            for (auto n = 0; n < DIMS; n++) {
+              _ret[n] -= s[n];
+            }
+            return _ret;
+          }
+          VECTOR_TYPE_NAME &operator-=(const VECTOR_TYPE_NAME &s) {
+            for (auto n = 0; n < DIMS; n++) {
+              values[n] -= s[n];
+            }
+            return (*this);
+          }(Vector3T, f32, 3);
+
+        };
+
+        struct Vector4T
+        {
+          union
+          {
+            f32 values[4];
+            struct
+            {
+              f32 x, y, z, w;
+            };
+          };
+
+          VECTOR_IMPL(Vector4T, f32, 3);
+
+        };
 
 
 	template<typename _ScalarType, size_t _Dim>
@@ -204,15 +506,15 @@ namespace harmony
 
 
 	/// <summary>
-	/// Matrix Definitions (Column Major)
+	/// Matrix Definitions (Row Major)
 	/// </summary>
 	template<typename _ScalarType, size_t _Cols, size_t _Rows>
 	struct matrix_t
 	{
 		union
 		{
-			vector_t<_ScalarType, _Rows>	columns[_Cols];
-			_ScalarType						values[_Rows*_Cols];
+			vector_t<_ScalarType, _Rows>	columns [_Cols];
+			_ScalarType			values  [_Rows * _Cols];
 		};
 
 		vector_t<_ScalarType, _Rows>& operator[](int index)
@@ -339,10 +641,10 @@ namespace harmony
         matrix_t<_ScalarType, 4, 4> Translate(vector_t<_ScalarType, 3> t)
         {
           return matrix_t<_ScalarType, 4,4> {
-            { 1,  0,  0,  t.x },
-            { 0,  1,  0,  t.y },
-            { 0,  0,  1,  t.z },
-            { 0,  0,  0,  1   }
+            { 1.0,  0.0,  0.0,  t[0] },
+            { 0.0,  1.0,  0.0,  t[1] },
+            { 0.0,  0.0,  1.0,  t[2] },
+            { 0.0,  0.0,  0.0,  1.0  }
           };
         }
 

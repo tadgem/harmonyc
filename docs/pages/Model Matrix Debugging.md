@@ -1,0 +1,2 @@
+- ![image.png](../assets/image_1747573088509_0.png)
+- GLM model matrix results in lvk examples
