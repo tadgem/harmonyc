@@ -48,6 +48,8 @@ namespace harmony
 		return guess;
 	}
 
+
+
 	template<typename _ScalarType, size_t _Dim>
 	struct vector_t
 	{
@@ -391,6 +393,52 @@ namespace harmony
               { _02,  _12, _22,  0.0 },
               { 0.0,  0.0, 0.0,  1.0 }
           };
+        }
+
+        template<typename _ScalarType>
+        matrix_t<_ScalarType, 4,4> LookAt(
+            vector_t<_ScalarType,3> eye,
+            vector_t<_ScalarType,3> center,
+            vector_t<_ScalarType,3> up)
+        {
+          vector_t<_ScalarType, 3> f = center - eye;
+          f.Normalize();
+          vector_t<_ScalarType, 3> UP = up.Normalized();
+          vector_t<_ScalarType, 3> s = f * UP;
+          vector_t<_ScalarType, 3> u = s.Normalized() * f;
+
+          // this is placeholder
+          return matrix_t<_ScalarType, 4,4>
+              {
+                  { s[0],   s[1],   s[2],   0.0},
+                  { u[0],   u[1],   u[2],   0.0},
+                  { -f[0],  -f[1],  -f[2],  0.0},
+                  { 0.0,    0.0,    0.0,    1.0}
+              };
+        }
+
+        template<typename _ScalarType>
+        matrix_t<_ScalarType, 4,4> Perspective(
+            _ScalarType   fovy_degrees,
+            _ScalarType   aspect,
+            _ScalarType   zNear,
+            _ScalarType   zFar)
+        {
+
+          auto fov = fovy_degrees / 2.0;
+          _ScalarType f = cos(fov) / sin(fov);
+
+          _ScalarType _00 = f / aspect;
+          _ScalarType _22 = (zFar + zNear) / (zNear - zFar);
+          _ScalarType _32 = (2 * zFar * zNear) / (zNear - zFar);
+          // this is placeholder
+          return matrix_t<_ScalarType, 4,4>
+              {
+                  { _00,   0.0,   0.0,  0.0},
+                  { 0.0,   f,     0.0,  0.0},
+                  { 0.0,   0.0,   _22,  _32},
+                  { 0.0,   0.0,   -1.0, 0.0},
+              };
         }
 
 }
