@@ -1,148 +1,7 @@
 #pragma once
 #include "Primitives.h"
 #include "Macros.h"
-#include "SDL3/SDL.h"
 
-#define VECTOR_IMPL (VECTOR_TYPE_NAME, SCALAR_TYPE, DIMS) \
-SCALAR_TYPE& operator[](int index)\
-    {\
-      HNY_ASSERT(index < DIMS, "Index out of range for VECTOR_TYPE_NAME");\
-      return values[index];\
-    }\
-    \
-    const SCALAR_TYPE& operator[](int index) const\
-    {\
-      HNY_ASSERT(index < DIMS, "Index out of range for VECTOR_TYPE_NAME");\
-      return values[index];\
-    }\
-    \
-    SCALAR_TYPE Magnitude() {\
-      SCALAR_TYPE _sqr_val = 0.0;\
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        _sqr_val += values[n] * values[n];\
-      }\
-      return SDL_sqrtf(_sqr_val);\
-    }\
-    \
-    void Normalize()\
-    {\
-      auto mag = Magnitude();\
-      for(auto i = 0; i < DIMS; i++)\
-      {\
-        values[i] /= mag;\
-      }\
-    }\
-    \
-    VECTOR_TYPE_NAME Normalized()\
-    {\
-      auto mag = Magnitude();\
-      VECTOR_TYPE_NAME v {};\
-    \
-      for(auto i = 0; i < DIMS; i++)\
-      {\
-        v[i] = values[i] / mag;\
-      }\
-      return v;\
-    }\
-    \
-    SCALAR_TYPE Dot(const VECTOR_TYPE_NAME& other)\
-    {\
-      SCALAR_TYPE ret = 0.0;\
-    \
-      for (int i = 0; i < DIMS; i++)\
-      {\
-        ret += values[i] * other.values[i];\
-      }\
-    \
-      return ret;\
-    }\
-    \
-    SCALAR_TYPE DegreesBetween(const VECTOR_TYPE_NAME& other)\
-    {\
-      auto dot = Dot(other);\
-      return std::acos(dot);\
-    }\
-    \
-    auto operator*(const SCALAR_TYPE& s)\
-    {\
-      auto _ret = *this;\
-      \
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        _ret[n] *= s;\
-      }\
-      return _ret;\
-    }\
-\
-    VECTOR_TYPE_NAME& operator*=(const SCALAR_TYPE& s)\
-    {\
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        values[n] *= s;\
-      }\
-      return (*this);\
-    }\
-\
-    VECTOR_TYPE_NAME operator*(const VECTOR_TYPE_NAME& s)\
-    {\
-      VECTOR_TYPE_NAME _ret = *this;\
-\
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        _ret[n] *= s[n];\
-      }\
-      return _ret;\
-    }\
-\
-    VECTOR_TYPE_NAME& operator*=(const VECTOR_TYPE_NAME& s)\
-    {\
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        values[n] *= s[n];\
-      }\
-      return (*this);\
-    }\
-\
-    VECTOR_TYPE_NAME operator+(const VECTOR_TYPE_NAME& s)\
-    {\
-      VECTOR_TYPE_NAME _ret = *this;\
-\
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        _ret[n] += s[n];\
-      }\
-      return _ret;\
-    }\
-\
-    VECTOR_TYPE_NAME& operator+=(const VECTOR_TYPE_NAME& s)\
-    {\
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        values[n] += s[n];\
-      }\
-      return (*this);\
-    }\
-\
-    VECTOR_TYPE_NAME operator-(const VECTOR_TYPE_NAME& s)\
-    {\
-      VECTOR_TYPE_NAME _ret = *this;\
-\
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        _ret[n] -= s[n];\
-      }\
-      return _ret;\
-    }\
-\
-    VECTOR_TYPE_NAME& operator-=(const VECTOR_TYPE_NAME& s)\
-    {\
-      for (auto n = 0; n < DIMS; n++)\
-      {\
-        values[n] -= s[n];\
-      }\
-      return (*this);\
-    }
 namespace harmony
 {
 	template<typename _ScalarType>
@@ -188,195 +47,34 @@ namespace harmony
 		return guess;
 	}
 
-
-        struct Vector3T
-        {
-          union
-          {
-            f32 values[3];
-            struct
-            {
-              f32 x, y, z;
-            };
-          };
-
-          (VECTOR_TYPE_NAME, SCALAR_TYPE, DIMS) SCALAR_TYPE &operator[](
-              int index) {
-            do {
-              while (!(index < DIMS &&
-                       "Index out of range for VECTOR_TYPE_NAME")) {
-                static struct SDL_AssertData sdl_assert_data = {
-                    0,
-                    0,
-                    "index < DIMS &&\"Index out of range for VECTOR_TYPE_NAME\"",
-                    0,
-                    0,
-                    0,
-                    0};
-                const SDL_AssertState sdl_assert_state = SDL_ReportAssertion(
-                    &sdl_assert_data, "_function_name_", "_file_name_", 203);
-                if (sdl_assert_state == SDL_ASSERTION_RETRY) {
-                  continue;
-                } else if (sdl_assert_state == SDL_ASSERTION_BREAK) {
-                  __debugbreak();
-                }
-                break;
-              }
-            } while ((0, 0));
-            return values[index];
-          }
-          const SCALAR_TYPE &operator[](int index) const {
-            do {
-              while (!(index < DIMS &&
-                       "Index out of range for VECTOR_TYPE_NAME")) {
-                static struct SDL_AssertData sdl_assert_data = {
-                    0,
-                    0,
-                    "index < DIMS &&\"Index out of range for VECTOR_TYPE_NAME\"",
-                    0,
-                    0,
-                    0,
-                    0};
-                const SDL_AssertState sdl_assert_state = SDL_ReportAssertion(
-                    &sdl_assert_data, "_function_name_", "_file_name_", 203);
-                if (sdl_assert_state == SDL_ASSERTION_RETRY) {
-                  continue;
-                } else if (sdl_assert_state == SDL_ASSERTION_BREAK) {
-                  __debugbreak();
-                }
-                break;
-              }
-            } while ((0, 0));
-            return values[index];
-          }
-          SCALAR_TYPE Magnitude() {
-            SCALAR_TYPE _sqr_val = 0.0;
-            for (auto n = 0; n < DIMS; n++) {
-              _sqr_val += values[n] * values[n];
-            }
-            return SDL_sqrtf(_sqr_val);
-          }
-          void Normalize() {
-            auto mag = Magnitude();
-            for (auto i = 0; i < DIMS; i++) {
-              values[i] /= mag;
-            }
-          }
-          VECTOR_TYPE_NAME Normalized() {
-            auto mag = Magnitude();
-            VECTOR_TYPE_NAME v{};
-            for (auto i = 0; i < DIMS; i++) {
-              v[i] = values[i] / mag;
-            }
-            return v;
-          }
-          SCALAR_TYPE Dot(const VECTOR_TYPE_NAME &other) {
-            SCALAR_TYPE ret = 0.0;
-            for (int i = 0; i < DIMS; i++) {
-              ret += values[i] * other.values[i];
-            }
-            return ret;
-          }
-          SCALAR_TYPE DegreesBetween(const VECTOR_TYPE_NAME &other) {
-            auto dot = Dot(other);
-            return std::acos(dot);
-          }
-          auto operator*(const SCALAR_TYPE &s) {
-            auto _ret = *this;
-            for (auto n = 0; n < DIMS; n++) {
-              _ret[n] *= s;
-            }
-            return _ret;
-          }
-          VECTOR_TYPE_NAME &operator*=(const SCALAR_TYPE &s) {
-            for (auto n = 0; n < DIMS; n++) {
-              values[n] *= s;
-            }
-            return (*this);
-          }
-          VECTOR_TYPE_NAME operator*(const VECTOR_TYPE_NAME &s) {
-            VECTOR_TYPE_NAME _ret = *this;
-            for (auto n = 0; n < DIMS; n++) {
-              _ret[n] *= s[n];
-            }
-            return _ret;
-          }
-          VECTOR_TYPE_NAME &operator*=(const VECTOR_TYPE_NAME &s) {
-            for (auto n = 0; n < DIMS; n++) {
-              values[n] *= s[n];
-            }
-            return (*this);
-          }
-          VECTOR_TYPE_NAME operator+(const VECTOR_TYPE_NAME &s) {
-            VECTOR_TYPE_NAME _ret = *this;
-            for (auto n = 0; n < DIMS; n++) {
-              _ret[n] += s[n];
-            }
-            return _ret;
-          }
-          VECTOR_TYPE_NAME &operator+=(const VECTOR_TYPE_NAME &s) {
-            for (auto n = 0; n < DIMS; n++) {
-              values[n] += s[n];
-            }
-            return (*this);
-          }
-          VECTOR_TYPE_NAME operator-(const VECTOR_TYPE_NAME &s) {
-            VECTOR_TYPE_NAME _ret = *this;
-            for (auto n = 0; n < DIMS; n++) {
-              _ret[n] -= s[n];
-            }
-            return _ret;
-          }
-          VECTOR_TYPE_NAME &operator-=(const VECTOR_TYPE_NAME &s) {
-            for (auto n = 0; n < DIMS; n++) {
-              values[n] -= s[n];
-            }
-            return (*this);
-          }(Vector3T, f32, 3);
-
-        };
-
-        struct Vector4T
-        {
-          union
-          {
-            f32 values[4];
-            struct
-            {
-              f32 x, y, z, w;
-            };
-          };
-
-          VECTOR_IMPL(Vector4T, f32, 3);
-
-        };
-
-
 	template<typename _ScalarType, size_t _Dim>
 	struct vector_t
 	{
-		_ScalarType values[_Dim];
-		
+		union {
+			_ScalarType values[_Dim];
+			// hacky but means all vectors are 16 bytes & we have access to xyzw components
+			struct {float x, y, z, w;};
+		};
 		_ScalarType& operator[](int index)
 		{
 			HNY_ASSERT(index < _Dim, "Index out of range for Vector");
-			return values[index]; 
+			return values[index];
 		}
-			
+
 		const _ScalarType& operator[](int index) const
 		{
-			HNY_ASSERT(index < _Dim, "Index out of range for Vector"); 
-			return values[index]; 
+			HNY_ASSERT(index < _Dim, "Index out of range for Vector");
+			return values[index];
 		}
 
 		_ScalarType Magnitude() {
-			
+
 			_ScalarType _sqr_val = 0.0;
 			for (auto n = 0; n < _Dim; n++)
 			{
 				_sqr_val += values[n] * values[n];
 			}
-			return SDL_sqrtf(_sqr_val);
+			return Sqrt(_sqr_val);
 		}
 
                 void Normalize()
@@ -388,10 +86,10 @@ namespace harmony
                   }
                 }
 
-                vector_t<_ScalarType, _Dim> Normalized()
+                vector_t<_ScalarType,  _Dim> Normalized()
                 {
                   auto mag = Magnitude();
-                  vector_t<_ScalarType, _Dim> v {};
+                  vector_t<_ScalarType,  _Dim> v {};
 
                   for(auto i = 0; i < _Dim; i++)
                   {
@@ -400,10 +98,10 @@ namespace harmony
                   return v;
                 }
 
-		_ScalarType Dot(const vector_t<_ScalarType, _Dim>& other)
+		_ScalarType Dot(const vector_t<_ScalarType,  _Dim>& other)
 		{
 			_ScalarType ret = 0.0;
-			
+
 			for (int i = 0; i < _Dim; i++)
 			{
 				ret += values[i] * other.values[i];
@@ -412,24 +110,24 @@ namespace harmony
 			return ret;
 		}
 
-		_ScalarType DegreesBetween(const vector_t<_ScalarType, _Dim>& other)
+		_ScalarType DegreesBetween(const vector_t<_ScalarType,  _Dim>& other)
 		{
 			auto dot = Dot(other);
-			return std::acos(dot);
+			return acos(dot);
 		}
 
 		auto operator*(const _ScalarType& s)
 		{
-			auto _ret = *this; 
-			
+			auto _ret = *this;
+
 			for (auto n = 0; n < _Dim; n++)
 			{
 				_ret[n] *= s;
 			}
 			return _ret;
 		}
-		
-		vector_t<_ScalarType, _Dim>& operator*=(const _ScalarType& s)
+
+		vector_t<_ScalarType,  _Dim>& operator*=(const _ScalarType& s)
 		{
 			for (auto n = 0; n < _Dim; n++)
 			{
@@ -438,17 +136,17 @@ namespace harmony
 			return (*this);
 		}
 
-		vector_t<_ScalarType, _Dim> operator*(const vector_t<_ScalarType, _Dim>& s)
+		vector_t<_ScalarType,  _Dim> operator*(const vector_t<_ScalarType,  _Dim>& s)
 		{
-			vector_t<_ScalarType, _Dim> _ret = *this; 
-			
+			vector_t<_ScalarType,  _Dim> _ret = *this;
+
 			for (auto n = 0; n < _Dim; n++)
 			{
-				_ret[n] *= s[n]; 
+				_ret[n] *= s[n];
 			}
-			return _ret; 
+			return _ret;
 		}
-			
+
 		vector_t<_ScalarType, _Dim>& operator*=(const vector_t<_ScalarType, _Dim>& s)
 		{
 			for (auto n = 0; n < _Dim; n++)
@@ -499,43 +197,39 @@ namespace harmony
 		}
 
 	};
-
-	typedef vector_t<f32, 2> Vector2;
-	typedef vector_t<f32, 3> Vector3;
-	typedef vector_t<f32, 4> Vector4;
-
+	
 
 	/// <summary>
 	/// Matrix Definitions (Row Major)
 	/// </summary>
-	template<typename _ScalarType, size_t _Cols, size_t _Rows>
+	template<typename _ScalarType, size_t _Rows, size_t _Cols>
 	struct matrix_t
 	{
 		union
 		{
-			vector_t<_ScalarType, _Rows>	columns [_Cols];
-			_ScalarType			values  [_Rows * _Cols];
+			vector_t<_ScalarType, _Cols>	columns [_Rows];
+			_ScalarType			values  [_Cols * _Rows];
 		};
 
-		vector_t<_ScalarType, _Rows>& operator[](int index)
+		vector_t<_ScalarType, _Cols>& operator[](int index)
 		{
-			HNY_ASSERT(index < _Cols, "Index out of range for Vector##VEC_DIM");
+			HNY_ASSERT(index < _Rows, "Index out of range for Vector##VEC_DIM");
 			return columns[index];
 		}
 
-		const vector_t<_ScalarType, _Rows>& operator[](int index) const
+		const vector_t<_ScalarType, _Cols>& operator[](int index) const
 		{
-			HNY_ASSERT(index < _Cols, "Index out of range for Vector##VEC_DIM"); 
+			HNY_ASSERT(index < _Rows, "Index out of range for Vector##VEC_DIM"); 
 			return columns[index]; 
 		}
 
 		auto Transpose()
 		{
-			matrix_t<_ScalarType, _Rows, _Cols> result{};
+			matrix_t<_ScalarType, _Cols, _Rows> result{};
 
-			for (int column = 0; column < _Cols; column++)
+			for (int column = 0; column < _Rows; column++)
 			{
-				for (int row = 0; row < _Rows; row++)
+				for (int row = 0; row < _Cols; row++)
 				{
 					result[row][column] = columns[column][row];
 				}
@@ -548,7 +242,7 @@ namespace harmony
 		{
 			auto _ret = *this;
 			
-			for (auto n = 0; n < _Cols*_Rows; n++)
+			for (auto n = 0; n < _Rows*_Cols; n++)
 			{
 				_ret.values[n] *= s; 
 			}
@@ -557,7 +251,7 @@ namespace harmony
 			
 		auto & operator*=(const f32& s)
 		{
-			for (auto n = 0; n < _Cols*_Rows; n++)
+			for (auto n = 0; n < _Rows*_Cols; n++)
 			{
 				values[n] *= s; 
 			}
@@ -567,16 +261,16 @@ namespace harmony
 		template<size_t _OtherCols, size_t _OtherRows>
 		auto operator*(const matrix_t<_ScalarType, _OtherCols, _OtherRows>& s)
 		{			
-			HNY_ASSERT(_Cols == _OtherRows, "Matrix cannot be multiplied, LHS.ColumnCount != RHS.RowCount");
+			HNY_ASSERT(_Rows == _OtherRows, "Matrix cannot be multiplied, LHS.ColumnCount != RHS.RowCount");
 
-			matrix_t<_ScalarType, _Cols, _OtherRows> result = {};
+			matrix_t<_ScalarType, _Rows, _OtherRows> result = {};
 
-			for (int column = 0; column < _Cols; column++)
+			for (int column = 0; column < _Rows; column++)
 			{
 				for (int row = 0; row < _OtherRows; row++)
 				{
 					f32 add_v = 0.0;
-					for (int add = 0; add < _Cols; add++)
+					for (int add = 0; add < _Rows; add++)
 					{
 						// add the add'th element of the LHS current column * RHS current row
 						add_v += columns[add][row] * s.columns[column][add];
@@ -596,7 +290,7 @@ namespace harmony
 		{
 			auto _ret = *this;
 
-			for (auto n = 0; n < _Cols * _Rows; n++)
+			for (auto n = 0; n < _Rows * _Cols; n++)
 			{
 				_ret.values[n] += s;
 			}
@@ -605,7 +299,7 @@ namespace harmony
 
 		auto& operator+=(const f32& s)
 		{
-			for (auto n = 0; n < _Cols * _Rows; n++)
+			for (auto n = 0; n < _Rows * _Cols; n++)
 			{
 				values[n] += s;
 			}
@@ -616,7 +310,7 @@ namespace harmony
 		{
 			auto _ret = *this;
 
-			for (auto n = 0; n < _Cols * _Rows; n++)
+			for (auto n = 0; n < _Rows * _Cols; n++)
 			{
 				_ret.values[n] -= s;
 			}
@@ -625,7 +319,7 @@ namespace harmony
 
 		auto& operator-=(const f32& s)
 		{
-			for (auto n = 0; n < _Cols * _Rows; n++)
+			for (auto n = 0; n < _Rows * _Cols; n++)
 			{
 				values[n] -= s;
 			}
@@ -633,114 +327,117 @@ namespace harmony
 		}
 	};
 
-	typedef matrix_t<f32, 2, 2> Matrix2x2;
-	typedef matrix_t<f32, 3, 3> Matrix3x3;
-	typedef matrix_t<f32, 4, 4> Matrix4x4;
+	typedef vector_t<f32, 2> Vector2f;
+	typedef vector_t<f32, 3> Vector3f;
+	typedef vector_t<f32, 4> Vector4f;
 
-        template<typename _ScalarType>
-        matrix_t<_ScalarType, 4, 4> Translate(vector_t<_ScalarType, 3> t)
-        {
-          return matrix_t<_ScalarType, 4,4> {
-            { 1.0,  0.0,  0.0,  t[0] },
-            { 0.0,  1.0,  0.0,  t[1] },
-            { 0.0,  0.0,  1.0,  t[2] },
-            { 0.0,  0.0,  0.0,  1.0  }
-          };
+	typedef matrix_t<f32, 2, 2> Matrix2x2f;
+	typedef matrix_t<f32, 3, 3> Matrix3x3f;
+	typedef matrix_t<f32, 4, 4> Matrix4x4f;
+
+    template<typename _ScalarType>
+    matrix_t<_ScalarType, 4, 4> Translate(vector_t<_ScalarType, 3> t)
+    {
+      return matrix_t<_ScalarType, 4,4> {
+        vector_t<_ScalarType, 4>{ 1.0,  0.0,  0.0,  t.x },
+        vector_t<_ScalarType, 4>{ 0.0,  1.0,  0.0,  t.y },
+        vector_t<_ScalarType, 4>{ 0.0,  0.0,  1.0,  t.z },
+        vector_t<_ScalarType, 4>{ 0.0,  0.0,  0.0,  1.0  }
+      };
+    }
+
+    template<typename _ScalarType>
+    matrix_t<_ScalarType, 4,4> Scale(vector_t<_ScalarType, 3> s)
+    {
+      return matrix_t<_ScalarType, 4,4>
+      {
+        vector_t<_ScalarType, 4>{ s.x,  0.0,  0.0,  0.0},
+        vector_t<_ScalarType, 4>{ 0.0,  s.y,  0.0,  0.0},
+        vector_t<_ScalarType, 4>{ 0.0,  0.0,  s.z,  0.0},
+        vector_t<_ScalarType, 4>{ 0.0,  0.0,  0.0,  1.0}
+      };
         }
 
-        template<typename _ScalarType>
-        matrix_t<_ScalarType, 4,4> Scale(vector_t<_ScalarType, 3> s)
-        {
-          return matrix_t<_ScalarType, 4,4>
+    // see https://registry.khronos.org/OpenGL-Refpages/gl2.1/
+    template<typename _ScalarType>
+    matrix_t<_ScalarType, 4, 4> Rotate(_ScalarType deg, vector_t<_ScalarType, 3> axis)
+    {
+      const _ScalarType c = cos(deg);
+      const _ScalarType s = sin(deg);
+
+      if(axis.Magnitude() > 1.0)
+      {
+        axis.Normalize();
+      }
+
+      const _ScalarType oneMinusC = 1.0 - c;
+      const _ScalarType xs = axis.x * s;
+      const _ScalarType ys = axis.y * s;
+      const _ScalarType zs = axis.z * s;
+
+      const _ScalarType _00 = axis.x * axis.x * oneMinusC + c;
+      const _ScalarType _10 = axis.x * axis.y * oneMinusC - zs;
+      const _ScalarType _20 = axis.x * axis.z * oneMinusC + ys;
+
+      const _ScalarType _01 = axis.y * axis.x * oneMinusC + zs;
+      const _ScalarType _11 = axis.y * axis.y * oneMinusC + c;
+      const _ScalarType _21 = axis.y * axis.z * oneMinusC - xs;
+
+      const _ScalarType _02 = axis.x * axis.z * oneMinusC - ys;
+      const _ScalarType _12 = axis.y * axis.z * oneMinusC + xs;
+      const _ScalarType _22 = axis.z * axis.z * oneMinusC + c;
+
+      return matrix_t<_ScalarType, 4,4> {
+          vector_t<_ScalarType, 4>{ _00 , _10, _20,  0.0 },
+          vector_t<_ScalarType, 4>{ _01,  _11, _21,  0.0 },
+          vector_t<_ScalarType, 4>{ _02,  _12, _22,  0.0 },
+          vector_t<_ScalarType, 4>{ 0.0,  0.0, 0.0,  1.0 }
+      };
+    }
+
+    template<typename _ScalarType>
+    matrix_t<_ScalarType, 4,4> LookAt(
+        vector_t<_ScalarType,3> eye,
+        vector_t<_ScalarType,3> center,
+        vector_t<_ScalarType,3> up)
+    {
+      vector_t<_ScalarType, 3> f = center - eye;
+      f.Normalize();
+      vector_t<_ScalarType, 3> UP = up.Normalized();
+      vector_t<_ScalarType, 3> s = f * UP;
+      vector_t<_ScalarType, 3> u = s.Normalized() * f;
+
+      // this is placeholder
+      return matrix_t<_ScalarType, 4,4>
           {
-            { s.x,  0.0,  0.0,  0.0},
-            { 0.0,  s.y,  0.0,  0.0},
-            { 0.0,  0.0,  s.z,  0.0},
-            { 0.0,  0.0,  0.0,  1.0}
+              vector_t<_ScalarType, 4>{ s[0],   s[1],   s[2],   0.0},
+              vector_t<_ScalarType, 4>{ u[0],   u[1],   u[2],   0.0},
+              vector_t<_ScalarType, 4>{ -f[0],  -f[1],  -f[2],  0.0},
+              vector_t<_ScalarType, 4>{ 0.0,    0.0,    0.0,    1.0}
           };
-        }
+    }
 
-        // see https://registry.khronos.org/OpenGL-Refpages/gl2.1/
-        template<typename _ScalarType>
-        matrix_t<_ScalarType, 4, 4> Rotate(_ScalarType deg, vector_t<_ScalarType, 3> axis)
-        {
-          const _ScalarType c = cos(deg);
-          const _ScalarType s = sin(deg);
+    template<typename _ScalarType>
+    matrix_t<_ScalarType, 4,4> Perspective(
+        _ScalarType   fovy_degrees,
+        _ScalarType   aspect,
+        _ScalarType   zNear,
+        _ScalarType   zFar)
+    {
 
-          if(axis.Magnitude() > 1.0)
+      auto fov = fovy_degrees / 2.0;
+      _ScalarType f = cos(fov) / sin(fov);
+
+      _ScalarType _00 = f / aspect;
+      _ScalarType _22 = (zFar + zNear) / (zNear - zFar);
+      _ScalarType _32 = (2 * zFar * zNear) / (zNear - zFar);
+      return matrix_t<_ScalarType, 4,4>
           {
-            axis.Normalize();
-          }
-
-          const _ScalarType oneMinusC = 1.0 - c;
-          const _ScalarType xs = axis.x * s;
-          const _ScalarType ys = axis.y * s;
-          const _ScalarType zs = axis.z * s;
-
-          const _ScalarType _00 = axis.x * axis.x * oneMinusC + c;
-          const _ScalarType _10 = axis.x * axis.y * oneMinusC - zs;
-          const _ScalarType _20 = axis.x * axis.z * oneMinusC + ys;
-
-          const _ScalarType _01 = axis.y * axis.x * oneMinusC + zs;
-          const _ScalarType _11 = axis.y * axis.y * oneMinusC + c;
-          const _ScalarType _21 = axis.y * axis.z * oneMinusC - xs;
-
-          const _ScalarType _02 = axis.x * axis.z * oneMinusC - ys;
-          const _ScalarType _12 = axis.y * axis.z * oneMinusC + xs;
-          const _ScalarType _22 = axis.z * axis.z * oneMinusC + c;
-
-          return matrix_t<_ScalarType, 4,4> {
-              { _00 , _10, _20,  0.0 },
-              { _01,  _11, _21,  0.0 },
-              { _02,  _12, _22,  0.0 },
-              { 0.0,  0.0, 0.0,  1.0 }
+              vector_t<_ScalarType, 4>{ _00,   0.0,   0.0,  0.0},
+              vector_t<_ScalarType, 4>{ 0.0,   f,     0.0,  0.0},
+              vector_t<_ScalarType, 4>{ 0.0,   0.0,   _22,  _32},
+              vector_t<_ScalarType, 4>{ 0.0,   0.0,   -1.0, 0.0},
           };
-        }
-
-        template<typename _ScalarType>
-        matrix_t<_ScalarType, 4,4> LookAt(
-            vector_t<_ScalarType,3> eye,
-            vector_t<_ScalarType,3> center,
-            vector_t<_ScalarType,3> up)
-        {
-          vector_t<_ScalarType, 3> f = center - eye;
-          f.Normalize();
-          vector_t<_ScalarType, 3> UP = up.Normalized();
-          vector_t<_ScalarType, 3> s = f * UP;
-          vector_t<_ScalarType, 3> u = s.Normalized() * f;
-
-          // this is placeholder
-          return matrix_t<_ScalarType, 4,4>
-              {
-                  { s[0],   s[1],   s[2],   0.0},
-                  { u[0],   u[1],   u[2],   0.0},
-                  { -f[0],  -f[1],  -f[2],  0.0},
-                  { 0.0,    0.0,    0.0,    1.0}
-              };
-        }
-
-        template<typename _ScalarType>
-        matrix_t<_ScalarType, 4,4> Perspective(
-            _ScalarType   fovy_degrees,
-            _ScalarType   aspect,
-            _ScalarType   zNear,
-            _ScalarType   zFar)
-        {
-
-          auto fov = fovy_degrees / 2.0;
-          _ScalarType f = cos(fov) / sin(fov);
-
-          _ScalarType _00 = f / aspect;
-          _ScalarType _22 = (zFar + zNear) / (zNear - zFar);
-          _ScalarType _32 = (2 * zFar * zNear) / (zNear - zFar);
-          // this is placeholder
-          return matrix_t<_ScalarType, 4,4>
-              {
-                  { _00,   0.0,   0.0,  0.0},
-                  { 0.0,   f,     0.0,  0.0},
-                  { 0.0,   0.0,   _22,  _32},
-                  { 0.0,   0.0,   -1.0, 0.0},
-              };
-        }
+    }
 
 }

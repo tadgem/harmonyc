@@ -31,343 +31,343 @@ TestResult AbsTest(Engine* e)
 /// <param name="e"></param>
 /// <returns></returns>
 
-TestResult Vector2ElementAccess(Engine* e)
+TestResult Vector2fElementAccess(Engine* e)
 {
-	Vector2 v = { 1.0f, 2.0f } ;
+	Vector2f v = { 1.0f, 2.0f } ;
 
-	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f, "Element access in to Vector2 Failed.");
+	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f, "Element access in to Vector2f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector2ElementArrayAccess(Engine* e)
+TestResult Vector2fElementArrayAccess(Engine* e)
 {
-	Vector2 v{ 1.0f, 2.0f };
+	Vector2f v{ 1.0f, 2.0f };
 
-	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f, "Array access in to Vector2 Failed.");
+	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f, "Array access in to Vector2f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector2Magnitude(Engine* e)
+TestResult Vector2fMagnitude(Engine* e)
 {
 	constexpr f32 EXPECTED_MAGNITUDE = 2.23606797749979;
 
-	Vector2 v {1.0f, 2.0f};
+	Vector2f v {1.0f, 2.0f};
 
-	TEST_ASSERT(FLOATING_POINT_ROUGHLY_EQUAL(v.Magnitude(), EXPECTED_MAGNITUDE), "Vector2 Magnitude is incorrect");
+	TEST_ASSERT(FLOATING_POINT_ROUGHLY_EQUAL(v.Magnitude(), EXPECTED_MAGNITUDE), "Vector2f Magnitude is incorrect");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector2ScalarMultiplication(Engine* e)
+TestResult Vector2fScalarMultiplication(Engine* e)
 {
-	Vector2 v{ 1.0f, 2.0f };
+	Vector2f v{ 1.0f, 2.0f };
 
-	Vector2 scaled = v * 2.0f;
+	Vector2f scaled = v * 2.0f;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(scaled[0], 2.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(scaled[1], 4.0), "Vector2 Scalar multiplication failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(scaled[1], 4.0), "Vector2f Scalar multiplication failed");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector2Multiplication(Engine* e)
+TestResult Vector2fMultiplication(Engine* e)
 {
-	Vector2 v1{ 1.0f, 2.0f };
-	Vector2 v2{ 1.0f, 2.0f };
+	Vector2f v1{ 1.0f, 2.0f };
+	Vector2f v2{ 1.0f, 2.0f };
 
-	Vector2 added = v1 * v2;
+	Vector2f added = v1 * v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(added[0], 1.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 4.0), "Vector2 multiplication failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 4.0), "Vector2f multiplication failed");
 
 	return TestResult::Pass();
 }
 
 
-TestResult Vector2Addition(Engine* e)
+TestResult Vector2fAddition(Engine* e)
 {
-	Vector2 v1{ 1.0f, 2.0f };
-	Vector2 v2{ 1.0f, 2.0f };
+	Vector2f v1{ 1.0f, 2.0f };
+	Vector2f v2{ 1.0f, 2.0f };
 
-	Vector2 added = v1 + v2;
+	Vector2f added = v1 + v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(added[0], 2.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 4.0), "Vector2 addition failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 4.0), "Vector2f addition failed");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector2Subtraction(Engine* e)
+TestResult Vector2fSubtraction(Engine* e)
 {
-	Vector2 v1{ 1.0f, 2.0f };
-	Vector2 v2{ 1.0f, 2.0f };
+	Vector2f v1{ 1.0f, 2.0f };
+	Vector2f v2{ 1.0f, 2.0f };
 
-	Vector2 subbed = v1 - v2;
+	Vector2f subbed = v1 - v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(subbed[0], 0.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(subbed[1], 0.0), "Vector2 subtraction failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(subbed[1], 0.0), "Vector2f subtraction failed");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector2Dot(Engine* e)
+TestResult Vector2fDot(Engine* e)
 {
-	Vector2 v1{ 0.0f, 1.0f };
-	Vector2 v2{ 0.0f, 1.0f };
+	Vector2f v1{ 0.0f, 1.0f };
+	Vector2f v2{ 0.0f, 1.0f };
 
 	auto dot1 = v1.Dot(v2);
-
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector2 Dot product failed when vectors should be positively parallel");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector2f Dot product failed when vectors should be positively parallel");
 
-	Vector2 v3{ 1.0f, 0.0f };
+	Vector2f v3{ 1.0f, 0.0f };
 	auto dot2 = v1.Dot(v3);
 
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector2 Dot product failed when vectors should be orthogonal");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector2f Dot product failed when vectors should be orthogonal");
 
-	Vector2 v4{ 0.0f, -1.0f };
+	Vector2f v4{ 0.0f, -1.0f };
 	auto dot3 = v1.Dot(v4);
 
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector2 Dot product failed when vectors should be negatively parallel");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector2f Dot product failed when vectors should be negatively parallel");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector3ElementAccess(Engine* e)
+TestResult Vector3fElementAccess(Engine* e)
 {
-	Vector3 v{ 1.0f, 2.0f, 3.0f };
 
-	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f && v[2] == 3.0f,  "Element access in to Vector3 Failed.");
+	Vector3f v{ 1.0f, 2.0f, 3.0f };
+
+	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f && v[2] == 3.0f,  "Element access in to Vector3f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector3ElementArrayAccess(Engine* e)
+TestResult Vector3fElementArrayAccess(Engine* e)
 {
-	Vector3 v{ 1.0f, 2.0f, 3.0f };
+	Vector3f v{ 1.0f, 2.0f, 3.0f };
 
 
-	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f && v[2] == 3.0f, "Array access in to Vector3 Failed.");
+	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f && v[2] == 3.0f, "Array access in to Vector3f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector3Magnitude(Engine* e)
+TestResult Vector3fMagnitude(Engine* e)
 {
 	constexpr f32 EXPECTED_MAGNITUDE = 3.741657386773941;
 
-	Vector3 v{ 1.0f, 2.0f, 3.0f };
+	Vector3f v{ 1.0f, 2.0f, 3.0f };
 
 
-	TEST_ASSERT(FLOATING_POINT_ROUGHLY_EQUAL(v.Magnitude(), EXPECTED_MAGNITUDE), "Vector3 Magnitude is incorrect");
+	TEST_ASSERT(FLOATING_POINT_ROUGHLY_EQUAL(v.Magnitude(), EXPECTED_MAGNITUDE), "Vector3f Magnitude is incorrect");
 	return TestResult::Pass();
 }
 
-TestResult Vector3ScalarMultiplication(Engine* e)
+TestResult Vector3fScalarMultiplication(Engine* e)
 {
-	Vector3 v{ 1.0f, 2.0f, 3.0f };
-	Vector3 scaled = v * 2.0f;
+	Vector3f v{ 1.0f, 2.0f, 3.0f };
+	Vector3f scaled = v * 2.0f;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(scaled[0], 2.0) && 
 		FLOATING_POINT_ROUGHLY_EQUAL(scaled[1], 4.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(scaled[2], 6.0), "Vector3 Scalar multiplication failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(scaled[2], 6.0), "Vector3f Scalar multiplication failed");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector3Multiplication(Engine* e)
+TestResult Vector3fMultiplication(Engine* e)
 {
-	Vector3 v1{ 1.0f, 2.0f, 3.0f };
-	Vector3 v2{ 1.0f, 2.0f, 3.0f };
+	Vector3f v1{ 1.0f, 2.0f, 3.0f };
+	Vector3f v2{ 1.0f, 2.0f, 3.0f };
 
-	Vector3 added = v1 * v2;
+	Vector3f added = v1 * v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(added[0], 1.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 4.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 9.0), "Vector3 multiplication failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 9.0), "Vector3f multiplication failed");
 
 	return TestResult::Pass();
 }
 
 
-TestResult Vector3Addition(Engine* e)
+TestResult Vector3fAddition(Engine* e)
 {
-	Vector3 v1{ 1.0f, 2.0f, 3.0f };
-	Vector3 v2{ 1.0f, 2.0f, 3.0f };
+	Vector3f v1{ 1.0f, 2.0f, 3.0f };
+	Vector3f v2{ 1.0f, 2.0f, 3.0f };
 
-	Vector3 added = v1 + v2;
+	Vector3f added = v1 + v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(added[0], 2.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 4.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 6.0), "Vector3 addition failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 6.0), "Vector3f addition failed");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector3Subtraction(Engine* e)
+TestResult Vector3fSubtraction(Engine* e)
 {
-	Vector3 v1{ 1.0f, 2.0f, 3.0f };
-	Vector3 v2{ 1.0f, 2.0f, 3.0f };
+	Vector3f v1{ 1.0f, 2.0f, 3.0f };
+	Vector3f v2{ 1.0f, 2.0f, 3.0f };
 
-	Vector3 added = v1 - v2;
+	Vector3f added = v1 - v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(added[0], 0.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 0.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 0.0), "Vector3 subtraction failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 0.0), "Vector3f subtraction failed");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector3Dot(Engine* e)
+TestResult Vector3fDot(Engine* e)
 {
-	Vector3 v1{ 0.0f, 1.0f, 0.0f};
-	Vector3 v2{ 0.0f, 1.0f, 0.0f};
+	Vector3f v1{ 0.0f, 1.0f, 0.0f};
+	Vector3f v2{ 0.0f, 1.0f, 0.0f};
 
 	auto dot1 = v1.Dot(v2);
 
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector3 Dot product failed when vectors should be positively parallel");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector3f Dot product failed when vectors should be positively parallel");
 
-	Vector3 v3{ 1.0f, 0.0f, 0.0f};
+	Vector3f v3{ 1.0f, 0.0f, 0.0f};
 	auto dot2 = v1.Dot(v3);
 
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector3 Dot product failed when vectors should be orthogonal");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector3f Dot product failed when vectors should be orthogonal");
 
-	Vector3 v4{ 0.0f, -1.0f , 0.0f};
+	Vector3f v4{ 0.0f, -1.0f , 0.0f};
 	auto dot3 = v1.Dot(v4);
 
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector3 Dot product failed when vectors should be negatively parallel");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector3f Dot product failed when vectors should be negatively parallel");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector4ElementAccess(Engine* e)
+TestResult Vector4fElementAccess(Engine* e)
 {
-	Vector4 v{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v{ 1.0f, 2.0f, 3.0f, 4.0f };
 
-	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f && v[2] == 3.0f && v[3] == 4.0f, "Element access in to Vector3 Failed.");
+	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f && v[2] == 3.0f && v[3] == 4.0f, "Element access in to Vector3f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector4ElementArrayAccess(Engine* e)
+TestResult Vector4fElementArrayAccess(Engine* e)
 {
-	Vector4 v{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v{ 1.0f, 2.0f, 3.0f, 4.0f };
 
-	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f && v[2] == 3.0f && v[3] == 4.0f, "Array access in to Vector3 Failed.");
+	TEST_ASSERT(v[0] == 1.0f && v[1] == 2.0f && v[2] == 3.0f && v[3] == 4.0f, "Array access in to Vector3f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector4Magnitude(Engine* e)
+TestResult Vector4fMagnitude(Engine* e)
 {
 	constexpr f32 EXPECTED_MAGNITUDE = 5.4772257804870605;
-	Vector4 v{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v{ 1.0f, 2.0f, 3.0f, 4.0f };
 	auto mag = v.Magnitude();
-	TEST_ASSERT(FLOATING_POINT_ROUGHLY_EQUAL(v.Magnitude(), EXPECTED_MAGNITUDE), "Vector4 Magnitude is incorrect");
+	TEST_ASSERT(FLOATING_POINT_ROUGHLY_EQUAL(v.Magnitude(), EXPECTED_MAGNITUDE), "Vector4f Magnitude is incorrect");
 	return TestResult::Pass();
 }
 
-TestResult Vector4ScalarMultiplication(Engine* e)
+TestResult Vector4fScalarMultiplication(Engine* e)
 {
-	Vector4 v{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v{ 1.0f, 2.0f, 3.0f, 4.0f };
 
-	Vector4 scaled = v * 2.0f;
+	Vector4f scaled = v * 2.0f;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(scaled[0], 2.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(scaled[1], 4.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(scaled[2], 6.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(scaled[3], 8.0), "Vector4 Scalar multiplication failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(scaled[3], 8.0), "Vector4f Scalar multiplication failed");
 
 	return TestResult::Pass();
 }
 
 
-TestResult Vector4Multiplication(Engine* e)
+TestResult Vector4fMultiplication(Engine* e)
 {
-	Vector4 v1{ 1.0f, 2.0f, 3.0f, 4.0f };
-	Vector4 v2{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v1{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v2{ 1.0f, 2.0f, 3.0f, 4.0f };
 
-	Vector4 added = v1 * v2;
+	Vector4f added = v1 * v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(added[0], 1.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 4.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 9.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(added[3], 16.0), "Vector4 multiplication failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(added[3], 16.0), "Vector4f multiplication failed");
 
 	return TestResult::Pass();
 }
 
 
-TestResult Vector4Addition(Engine* e)
+TestResult Vector4fAddition(Engine* e)
 {
-	Vector4 v1{ 1.0f, 2.0f, 3.0f, 4.0f };
-	Vector4 v2{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v1{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v2{ 1.0f, 2.0f, 3.0f, 4.0f };
 
-	Vector4 added = v1 + v2;
+	Vector4f added = v1 + v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(added[0], 2.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 4.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 6.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(added[3], 8.0), "Vector4 addition failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(added[3], 8.0), "Vector4f addition failed");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector4Subtraction(Engine* e)
+TestResult Vector4fSubtraction(Engine* e)
 {
-	Vector4 v1{ 1.0f, 2.0f, 3.0f, 4.0f };
-	Vector4 v2{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v1{ 1.0f, 2.0f, 3.0f, 4.0f };
+	Vector4f v2{ 1.0f, 2.0f, 3.0f, 4.0f };
    
-	Vector4 added = v1 - v2;
+	Vector4f added = v1 - v2;
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(added[0], 0.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[1], 0.0) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(added[2], 0.0) &&
-		FLOATING_POINT_ROUGHLY_EQUAL(added[3], 0.0), "Vector4 subtraction failed");
+		FLOATING_POINT_ROUGHLY_EQUAL(added[3], 0.0), "Vector4f subtraction failed");
 
 	return TestResult::Pass();
 }
 
-TestResult Vector4Dot(Engine* e)
+TestResult Vector4fDot(Engine* e)
 {
-	Vector4 v1{ 0.0f, 1.0f, 0.0f , 0.0f};
-	Vector4 v2{ 0.0f, 1.0f, 0.0f , 0.0f};
+	Vector4f v1{ 0.0f, 1.0f, 0.0f , 0.0f};
+	Vector4f v2{ 0.0f, 1.0f, 0.0f , 0.0f};
 
 	auto dot1 = v1.Dot(v2);
 
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector4 Dot product failed when vectors should be positively parallel");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot1, 1.0), "Vector4f Dot product failed when vectors should be positively parallel");
 
-	Vector4 v3{ 1.0f, 0.0f, 0.0f , 0.0f};
+	Vector4f v3{ 1.0f, 0.0f, 0.0f , 0.0f};
 	auto dot2 = v1.Dot(v3);
 
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector4 Dot product failed when vectors should be orthogonal");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot2, 0.0), "Vector4f Dot product failed when vectors should be orthogonal");
 
-	Vector4 v4{ 0.0f, -1.0f , 0.0f, 0.0f };
+	Vector4f v4{ 0.0f, -1.0f , 0.0f, 0.0f };
 	auto dot3 = v1.Dot(v4);
 
 	TEST_ASSERT(
-		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector4 Dot product failed when vectors should be negatively parallel");
+		FLOATING_POINT_ROUGHLY_EQUAL(dot3, -1.0), "Vector4f Dot product failed when vectors should be negatively parallel");
 
 	return TestResult::Pass();
 }
@@ -375,52 +375,52 @@ TestResult Vector4Dot(Engine* e)
 /// <summary>
 /// Matrix tests
 /// </summary>
-TestResult Matrix2x2ElementAccess(Engine* e)
+TestResult Matrix2x2fElementAccess(Engine* e)
 {
-	Matrix2x2 a { 1,3,2,4 };
+	Matrix2x2f a { 1,3,2,4 };
 	
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(a[0][0], 1) && 
 		FLOATING_POINT_ROUGHLY_EQUAL(a[0][1], 3) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(a[1][0], 2) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(a[1][1], 4)
-		, "Element access in to Matrix2x2 Failed.");
+		, "Element access in to Matrix2x2f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Matrix2x2Multiplication(Engine* e)
+TestResult Matrix2x2fMultiplication(Engine* e)
 {
-	Matrix2x2 a{ 1,3,2,4 };
-	Matrix2x2 b{ 5,7,6,8 };
-	Matrix2x2 c = a * b;
+	Matrix2x2f a{ 1,3,2,4 };
+	Matrix2x2f b{ 5,7,6,8 };
+	Matrix2x2f c = a * b;
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][0], 19) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][1], 43) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[1][0], 22) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[1][1], 50)
-		, "Matrix2x2 multiplication Failed.");
+		, "Matrix2x2f multiplication Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Matrix2x2Transpose(Engine* e)
+TestResult Matrix2x2fTranspose(Engine* e)
 {
-	Matrix2x2 a{ 1,3,2,4 };
-	Matrix2x2 c = a.Transpose();
+	Matrix2x2f a{ 1,3,2,4 };
+	Matrix2x2f c = a.Transpose();
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][0], 1) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][1], 2) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[1][0], 3) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[1][1], 4)
-		, "Matrix2x2 Transpose Failed.");
+		, "Matrix2x2f Transpose Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Matrix3x3ElementAccess(Engine* e)
+TestResult Matrix3x3fElementAccess(Engine* e)
 {
-	Matrix3x3 a{ 1,4,7,2,5,8,3,6,9 };
+	Matrix3x3f a{ 1,4,7,2,5,8,3,6,9 };
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(a[0][0], 1) &&
@@ -432,17 +432,17 @@ TestResult Matrix3x3ElementAccess(Engine* e)
 		FLOATING_POINT_ROUGHLY_EQUAL(a[2][0], 3) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(a[2][1], 6) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(a[2][2], 9)
-		, "Element access in to Matrix3x3 Failed.");
+		, "Element access in to Matrix3x3f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Matrix3x3Multiplication(Engine* e)
+TestResult Matrix3x3fMultiplication(Engine* e)
 {
-	Matrix3x3 a{ 1,4,7,2,5,8,3,6,9 };
-	Matrix3x3 b{ 2,5,8,3,6,9,4,7,10 };
+	Matrix3x3f a{ 1,4,7,2,5,8,3,6,9 };
+	Matrix3x3f b{ 2,5,8,3,6,9,4,7,10 };
 
-	Matrix3x3 c = a * b;
+	Matrix3x3f c = a * b;
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][0], 36) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][1], 81) &&
@@ -453,15 +453,15 @@ TestResult Matrix3x3Multiplication(Engine* e)
 		FLOATING_POINT_ROUGHLY_EQUAL(c[2][0], 48) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[2][1], 111) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[2][2], 174)
-		, "Matrix3x3 multiplication Failed.");
+		, "Matrix3x3f multiplication Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Matrix3x3Transpose(Engine* e)
+TestResult Matrix3x3fTranspose(Engine* e)
 {
-	Matrix3x3 a{ 1,4,7,2,5,8,3,6,9 };
-	Matrix3x3 c = a.Transpose();
+	Matrix3x3f a{ 1,4,7,2,5,8,3,6,9 };
+	Matrix3x3f c = a.Transpose();
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][0], 1) &&
@@ -473,14 +473,14 @@ TestResult Matrix3x3Transpose(Engine* e)
 		FLOATING_POINT_ROUGHLY_EQUAL(c[2][0], 7) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[2][1], 8) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[2][2], 9)
-		, "Matrix3x3 Transpose Failed.");
+		, "Matrix3x3f Transpose Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Matrix4x4ElementAccess(Engine* e)
+TestResult Matrix4x4fElementAccess(Engine* e)
 {
-	Matrix4x4 a{ 1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16 };
+	Matrix4x4f a{ 1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16 };
 
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(a[0][0], 1)  &&
@@ -499,17 +499,17 @@ TestResult Matrix4x4ElementAccess(Engine* e)
 		FLOATING_POINT_ROUGHLY_EQUAL(a[3][1], 8)  &&
 		FLOATING_POINT_ROUGHLY_EQUAL(a[3][2], 12) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(a[3][3], 16) 
-		, "Element access in to Matrix4x4 Failed.");
+		, "Element access in to Matrix4x4f Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Matrix4x4Multiplication(Engine* e)
+TestResult Matrix4x4fMultiplication(Engine* e)
 {
-	Matrix4x4 a{ 1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16 };
-	Matrix4x4 b{ 2,6,10,14,3,7,11,15,4,8,12,16,5,9,13,17 };
+	Matrix4x4f a{ 1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16 };
+	Matrix4x4f b{ 2,6,10,14,3,7,11,15,4,8,12,16,5,9,13,17 };
 
-	Matrix4x4 c = a * b;
+	Matrix4x4f c = a * b;
 	TEST_ASSERT(
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][0], 100) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[0][1], 228) &&
@@ -527,14 +527,14 @@ TestResult Matrix4x4Multiplication(Engine* e)
 		FLOATING_POINT_ROUGHLY_EQUAL(c[3][1], 306) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[3][2], 482) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[3][3], 658)
-		, "Matrix4x4 multiplication Failed.");
+		, "Matrix4x4f multiplication Failed.");
 
 	return TestResult::Pass();
 }
 
-TestResult Matrix4x4Transpose(Engine* e)
+TestResult Matrix4x4fTranspose(Engine* e)
 {
-	Matrix4x4 a{ 1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16 };
+	Matrix4x4f a{ 1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16 };
 	auto c = a.Transpose();
 
 	TEST_ASSERT(
@@ -554,17 +554,22 @@ TestResult Matrix4x4Transpose(Engine* e)
 		FLOATING_POINT_ROUGHLY_EQUAL(c[3][1], 14) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[3][2], 15) &&
 		FLOATING_POINT_ROUGHLY_EQUAL(c[3][3], 16)
-		, "Matrix4x4 Transpose Failed.");
+		, "Matrix4x4f Transpose Failed.");
 
 	return TestResult::Pass();
 }
 
 TestResult TranslationMatrixTest(Engine* e)
 {
-  Vector3 pos = {1.0, 2.0, 3.0};
-  Vector3T p2 = {1.0, 2.0, 3.0};
-  p2.x;
-  return TestResult::Pass();
+	Vector3f posRotScale = {1.0, 2.0, 3.0};
+	Matrix4x4f trans = Translate(posRotScale);
+
+	Matrix4x4f rot = Rotate(posRotScale.Magnitude(), posRotScale.Normalized());
+
+	Matrix4x4f scale = Scale(posRotScale);
+
+	Matrix4x4f model = trans * rot * scale;
+	return TestResult::Pass();
 }
 
 
@@ -576,42 +581,43 @@ ADD_TEST(AbsTest)
 
 
 // Vector Tests
-//ADD_TEST(Vector2ElementAccess)
-//ADD_TEST(Vector2ElementArrayAccess)
-//ADD_TEST(Vector2Magnitude)
-//ADD_TEST(Vector2ScalarMultiplication)
-//ADD_TEST(Vector2Multiplication)
-//ADD_TEST(Vector2Addition)
-//ADD_TEST(Vector2Subtraction)
-ADD_TEST(Vector2Dot)
-//ADD_TEST(Vector3ElementAccess)
-//ADD_TEST(Vector3ElementArrayAccess)
-//ADD_TEST(Vector3Magnitude)
-//ADD_TEST(Vector3ScalarMultiplication)
-//ADD_TEST(Vector3Multiplication)
-//ADD_TEST(Vector3Addition)
-//ADD_TEST(Vector3Subtraction)
-ADD_TEST(Vector3Dot)
-//ADD_TEST(Vector4ElementAccess)
-//ADD_TEST(Vector4ElementArrayAccess)
-//ADD_TEST(Vector4Magnitude)
-//ADD_TEST(Vector4ScalarMultiplication)
-//ADD_TEST(Vector4Multiplication)
-//ADD_TEST(Vector4Addition)
-//ADD_TEST(Vector4Subtraction)
-ADD_TEST(Vector4Dot)
+//ADD_TEST(Vector2fElementAccess)
+//ADD_TEST(Vector2fElementArrayAccess)
+//ADD_TEST(Vector2fMagnitude)
+//ADD_TEST(Vector2fScalarMultiplication)
+//ADD_TEST(Vector2fMultiplication)
+//ADD_TEST(Vector2fAddition)
+//ADD_TEST(Vector2fSubtraction)
+ADD_TEST(Vector2fDot)
+//ADD_TEST(Vector3fElementAccess)
+//ADD_TEST(Vector3fElementArrayAccess)
+//ADD_TEST(Vector3fMagnitude)
+//ADD_TEST(Vector3fScalarMultiplication)
+//ADD_TEST(Vector3fMultiplication)
+//ADD_TEST(Vector3fAddition)
+//ADD_TEST(Vector3fSubtraction)
+ADD_TEST(Vector3fDot)
+//ADD_TEST(Vector4fElementAccess)
+//ADD_TEST(Vector4fElementArrayAccess)
+//ADD_TEST(Vector4fMagnitude)
+//ADD_TEST(Vector4fScalarMultiplication)
+//ADD_TEST(Vector4fMultiplication)
+//ADD_TEST(Vector4fAddition)
+//ADD_TEST(Vector4fSubtraction)
+ADD_TEST(Vector4fDot)
 
 // Matrix Tests
 
-//ADD_TEST(Matrix2x2ElementAccess)
-//ADD_TEST(Matrix2x2Multiplication)
-//ADD_TEST(Matrix2x2Transpose)
-//ADD_TEST(Matrix3x3ElementAccess)
-//ADD_TEST(Matrix3x3Multiplication)
-//ADD_TEST(Matrix3x3Transpose)
-//ADD_TEST(Matrix4x4ElementAccess)
-//ADD_TEST(Matrix4x4Multiplication)
-//ADD_TEST(Matrix4x4Transpose)
+//ADD_TEST(Matrix2x2fElementAccess)
+//ADD_TEST(Matrix2x2fMultiplication)
+//ADD_TEST(Matrix2x2fTranspose)
+//ADD_TEST(Matrix3x3fElementAccess)
+//ADD_TEST(Matrix3x3fMultiplication)
+//ADD_TEST(Matrix3x3fTranspose)
+//ADD_TEST(Matrix4x4fElementAccess)
+//ADD_TEST(Matrix4x4fMultiplication)
+//ADD_TEST(Matrix4x4fTranspose)
 
 // Transformation Tests
+ADD_TEST(TranslationMatrixTest)
 TEST_APP_END_SUITE()
