@@ -36,10 +36,49 @@ struct TestResult {
   };
 };
 
+struct TestCandidate {
+  TestString mName;
+  TestResult (*mTestFunc)(Engine *e);
+};
+
 } // namespace harmony
 
-static void TestGUI() {
+static void TestGUI(harmony::TestVector<harmony::TestCandidate> &tests,
+                    harmony::TestVector<harmony::TestResult> &results) {
 
+  harmony::Engine e =
+      harmony::Engine::Init(1600, 900, false, MEGABYTES(512), false);
+
+  while (e.ShouldRun()) {
+    e.PreFrame();
+
+    // do test imgui
+    if (ImGui::Begin("Test Explorer")) {
+      for (auto &test : tests) {
+        if (ImGui::Button(test.mName.c_str())) {
+          // enqueue test and shutdown test explorer app
+          HNY_LOG_ERROR("Running Test : %s\n", test.mName.c_str());
+        }
+      }
+    }
+    ImGui::End();
+
+    lvk::commands::RecordGraphicsCommands(
+        *e.mVK, [&](VkCommandBuffer &cmd, uint32 frame) {
+          lvk::Array<VkClearValue, 2> clearValues{};
+          clearValues[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
+          clearValues[1].depthStencil = {1.0f, 0};
+          harmony::VkTech::ClearRenderPass(
+              *e.mVK, cmd, frame, e.mVK->m_SwapchainImageRenderPass,
+              e.mVK->m_SwapChainFramebuffers[frame],
+              e.mVK->m_SwapChainImageExtent, clearValues);
+        });
+
+    e.EndFrame();
+  }
+  // spin up imgui instance,
+  // allow user to pick one test or run all (custom config TODO)
+  //
 }
 
 #define STRINGIZE_DETAIL(x) #x
@@ -59,34 +98,16 @@ static void TestGUI() {
   int main() {                                                                 \
     constexpr uint64 TEST_HEAP_SIZE = engine_heap_size;                        \
     TestVector<harmony::TestResult> sResults{};                                \
+    TestVector<harmony::TestCandidate> sTests{};                               \
     TestString sCurrentTestName = "";                                          \
     HNY_LOG_INFO("%s Tests\n", suite_name);
 
 #define TEST_APP_END_SUITE()                                                   \
-  for (auto &result : sResults) {                                              \
-    HNY_LOG_INFO("Test %s, Result : %s" NORMAL_PRINT_CODE                      \
-                 ",Time Taken : %f ms\n",                                      \
-                 result.mName.c_str(),                                         \
-                 result.mResult == harmony::TestResultEnum::Fail               \
-                     ? RED_PRINT_CODE "Fail"                                   \
-                     : GREEN_PRINT_CODE "Pass",                                \
-                 result.mElapsedMs);                                           \
-    if (result.mResult != harmony::TestResultEnum::Pass) {                     \
-      HNY_LOG_ERROR(" > Message : %s\n", result.mResultMessage.c_str());       \
-    }                                                                          \
-  }                                                                            \
-  }                                                                            \
-  ;
+  TestGUI(sTests, sResults);                                                   \
+  }
+;
 
 #define ADD_TEST(TEST_NAME)                                                    \
   {                                                                            \
-    HNY_LOG_INFO("Running Test : %s\n", #TEST_NAME);                           \
-    harmony::Engine e =                                                        \
-        harmony::Engine::Init(1280, 720, false, TEST_HEAP_SIZE, false);        \
-    harmony::Timer timer_##TEST_NAME;                                          \
-    auto result_##TEST_NAME = TEST_NAME(&e);                                   \
-    result_##TEST_NAME.mName = #TEST_NAME;                                     \
-    f64 time_taken_##TEST_NAME = timer_##TEST_NAME.ElapsedMillisecondsF();     \
-    result_##TEST_NAME.mElapsedMs = time_taken_##TEST_NAME;                    \
-    sResults.push_back(result_##TEST_NAME);                                    \
+    sTests.push_back({#TEST_NAME, &TEST_NAME});                                \
   }

@@ -1,5 +1,5 @@
-#include "HarmonyTest.h"
-
+// #include "HarmonyTest.h"
+#include "HarmonyTestV2.h"
 using namespace harmony;
 
 /// <summary>
