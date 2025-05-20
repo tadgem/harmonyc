@@ -5,23 +5,23 @@
 namespace harmony {
 
 struct AssetLoadInfo {
-    String mPath;
-    AssetType mType;
+  String mPath;
+  AssetType mType;
 
-    bool operator==(const AssetLoadInfo& o) const {
-        return mPath == o.mPath && mType == o.mType;
-    }
+  bool operator==(const AssetLoadInfo &o) const {
+    return mPath == o.mPath && mType == o.mType;
+  }
 
-    void operator=(const AssetLoadInfo& o) {
-        mPath = o.mPath;
-        mType = o.mType;
-    }
+  void operator=(const AssetLoadInfo &o) {
+    mPath = o.mPath;
+    mType = o.mType;
+  }
 
-    bool operator<(const AssetLoadInfo& o) const {
-        return mPath.size() < o.mPath.size();
-    }
+  bool operator<(const AssetLoadInfo &o) const {
+    return mPath.size() < o.mPath.size();
+  }
 
-    AssetHandle ToHandle();
+  AssetHandle ToHandle();
 };
 
 enum class AssetLoadProgress { NotLoaded, Loading, Loaded, Unloading };
@@ -29,21 +29,21 @@ enum class AssetLoadProgress { NotLoaded, Loading, Loaded, Unloading };
 /// <summary>
 /// Asset callback type defs
 /// </summary>
-using AssetIntermediateCallback     = void (*)(AssetIntermediate *);
-using OnAssetLoadedCallback         = void (*)(Asset *);
-using OnAssetUnloadedCallback       = void (*)(Asset *);
+using AssetIntermediateCallback = void (*)(AssetIntermediate *);
+using OnAssetLoadedCallback = void (*)(Asset *);
+using OnAssetUnloadedCallback = void (*)(Asset *);
 
 struct AssetLoadResult {
-    AssetIntermediate* mLoadedAssetIntermediate = nullptr;
-    // additional assets that may be required to completely load this asset
-    Vector<AssetLoadInfo>             mNewAssetsToLoad;
-    // synchronous tasks associated with this asset e.g. submit tex mem to GPU
-    // in openGL
-    Vector<AssetIntermediateCallback> mSynchronousAssetCallbacks;
+  AssetIntermediate *mLoadedAssetIntermediate = nullptr;
+  // additional assets that may be required to completely load this asset
+  Vector<AssetLoadInfo> mNewAssetsToLoad;
+  // synchronous tasks associated with this asset e.g. submit tex mem to GPU
+  // in openGL
+  Vector<AssetIntermediateCallback> mSynchronousAssetCallbacks;
 };
 
-using LoadAssetCallback = AssetLoadResult(*)(const String& path);
-using UnloadAssetCallback = void (*)(Asset* a);
+using LoadAssetCallback = AssetLoadResult (*)(const String &path);
+using UnloadAssetCallback = void (*)(Asset *a);
 
 class AssetManager {
 public:
@@ -59,16 +59,14 @@ public:
   void UnloadAsset(const AssetHandle &handle);
   Asset *GetAsset(const AssetHandle &handle);
 
-  template<typename _Ty>
-  _Ty* GetAsset(const AssetHandle& handle)
-  {
-      static_assert(std::is_base_of<Asset, _Ty>() && "Provided type is not an asset");
-      auto* a = GetAsset(handle);
-      if (a)
-      {
-          return static_cast<_Ty*>(a);
-      }
-      return nullptr;
+  template <typename _Ty> _Ty *GetAsset(const AssetHandle &handle) {
+    static_assert(std::is_base_of<Asset, _Ty>() &&
+                  "Provided type is not an asset");
+    auto *a = GetAsset(handle);
+    if (a) {
+      return static_cast<_Ty *>(a);
+    }
+    return nullptr;
   }
   AssetLoadProgress GetAssetLoadProgress(const AssetHandle &handle);
 
@@ -83,24 +81,22 @@ public:
   void WaitAllUnloads();
   void UnloadAllAssets();
 
-
   void Update();
   void Shutdown();
 
 protected:
   friend struct Engine;
   HashMap<AssetType, Pair<LoadAssetCallback, UnloadAssetCallback>>
-                                                pAssetTypeLoadFuncs;
+      pAssetTypeLoadFuncs;
   HashMap<AssetHandle, Future<AssetLoadResult>> pPendingLoadTasks;
-  HashMap<AssetHandle, Unique<Asset>>           pLoadedAssets;
-  HashMap<AssetHandle, AssetLoadResult>         pPendingSyncLoadCallbacks;
+  HashMap<AssetHandle, Unique<Asset>> pLoadedAssets;
+  HashMap<AssetHandle, AssetLoadResult> pPendingSyncLoadCallbacks;
   HashMap<AssetHandle, OnAssetUnloadedCallback> pPendingUnloadCallbacks;
-  HashMap<AssetHandle, OnAssetLoadedCallback>   pOnAssetLoadedCallbacks;
-  Vector<AssetLoadInfo>                         pQueuedLoads;
+  HashMap<AssetHandle, OnAssetLoadedCallback> pOnAssetLoadedCallbacks;
+  Vector<AssetLoadInfo> pQueuedLoads;
 
   static constexpr uint16 pCallbackTasksPerUpdate = 1;
   static constexpr uint16 pMaxAsyncTasksInFlight = 8;
-
 
   void HandleCallbacks();
 

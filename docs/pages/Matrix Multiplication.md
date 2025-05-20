@@ -1,3 +1,3 @@
 - and _N_ x _M_ matrix multiplied by a _P_ x _N_ matrix results in a _P_ x _M_ matrix
-- Matrices may only be multiplied if the number of columns in the first matrix matches the number of rows in the second matrix.
+- Matrices may only be multiplied if the number of rows in the first matrix matches the number of rows in the second matrix.
 -

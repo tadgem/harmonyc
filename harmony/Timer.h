@@ -1,50 +1,43 @@
 #pragma once
-#include <chrono>
 #include "Primitives.h"
-namespace harmony
-{
-	typedef std::chrono::high_resolution_clock HighResolutionClock;
+#include <chrono>
+namespace harmony {
+typedef std::chrono::high_resolution_clock HighResolutionClock;
 
-	class Timer
-	{
-	public:
-		typedef HighResolutionClock::time_point TimePoint;
+class Timer {
+public:
+  typedef HighResolutionClock::time_point TimePoint;
 
-		TimePoint mStart;
+  TimePoint mStart;
 
-		Timer() : mStart(HighResolutionClock::now()) {}
+  Timer() : mStart(HighResolutionClock::now()) {}
 
-		auto Elapsed()
-		{
-			return HighResolutionClock::now() - mStart;
-		}
+  auto Elapsed() { return HighResolutionClock::now() - mStart; }
 
-		int64 ElapsedMilliseconds()
-		{
-			auto ms = stl::chrono::duration_cast<stl::chrono::milliseconds>(Elapsed());
-			return static_cast<int64>(ms.count());
-		}
+  int64 ElapsedMilliseconds() {
+    auto ms = stl::chrono::duration_cast<stl::chrono::milliseconds>(Elapsed());
+    return static_cast<int64>(ms.count());
+  }
 
-		int64 ElapsedNanoseconds()
-		{
-			auto ms = stl::chrono::duration_cast<stl::chrono::nanoseconds>(Elapsed());
-			return static_cast<int64>(ms.count());
-		}
+  int64 ElapsedNanoseconds() {
+    auto ms = stl::chrono::duration_cast<stl::chrono::nanoseconds>(Elapsed());
+    return static_cast<int64>(ms.count());
+  }
 
-		f64 ElapsedMillisecondsF()
-		{
+  f64 ElapsedMillisecondsF() {
 
-			auto ns_raw = stl::chrono::duration_cast<stl::chrono::nanoseconds>(Elapsed());
-			auto ns_f = static_cast<f64>(ns_raw.count());
-			return ns_f / 1000000.0;
-		}
+    auto ns_raw =
+        stl::chrono::duration_cast<stl::chrono::nanoseconds>(Elapsed());
+    auto ns_f = static_cast<f64>(ns_raw.count());
+    return ns_f / 1000000.0;
+  }
 
-		f64 ElapsedNanosecondsF()
-		{
+  f64 ElapsedNanosecondsF() {
 
-			auto ns_raw = stl::chrono::duration_cast<stl::chrono::nanoseconds>(Elapsed());
-			auto ns_f = static_cast<f64>(ns_raw.count());
-			return ns_f;
-		}
-	};
-}
+    auto ns_raw =
+        stl::chrono::duration_cast<stl::chrono::nanoseconds>(Elapsed());
+    auto ns_f = static_cast<f64>(ns_raw.count());
+    return ns_f;
+  }
+};
+} // namespace harmony

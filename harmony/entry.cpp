@@ -7,8 +7,8 @@
 #include "Json.h"
 #include "Macros.h"
 #include "Memory.h"
-#include "Timer.h"
 #include "STL.h"
+#include "Timer.h"
 #include "VkTech.h"
 
 #define FLECS_USE_OS_ALLOC
@@ -27,7 +27,8 @@ int main() {
   using namespace harmony;
   bool enableSwapchainMSAA = false;
   bool enableVulkanValidation = false;
-  Engine engine = Engine::Init(1920, 1080, enableSwapchainMSAA, GIGABYTES(4), enableVulkanValidation);
+  Engine engine = Engine::Init(1920, 1080, enableSwapchainMSAA, GIGABYTES(4),
+                               enableVulkanValidation);
 
   AssetHandle sh{};
   String someString = "Hello";
@@ -36,10 +37,10 @@ int main() {
 
   printf("Handle Str : %s\n", handle.mPath.c_str());
   {
-    lvk::Vector3 someUniqueData = { 10, 20, 30 };
+    lvk::Vector3 someUniqueData = {10, 20, 30};
     AssetT<lvk::Vector3, AssetType::Audio> asset(someString, someUniqueData);
     AssetIntermediateT<lvk::Vector3, lvk::Vector3, AssetType::Audio> inter(
-    static_cast<Asset*>(&asset), lvk::Vector3{ 0.0f, 0.0f, 0.0f });
+        static_cast<Asset *>(&asset), lvk::Vector3{0.0f, 0.0f, 0.0f});
 
     lvk::Vector3 result = asset.mData;
   }
@@ -47,7 +48,7 @@ int main() {
   flecs::world ecs{};
   flecs::entity e = ecs.entity();
   e.insert([](lvk::Vector3 position) { position = {1, 2, 3}; });
-  
+
   Json someJson;
   someJson["dad"] = 3;
   int64 val = someJson["dad"];
@@ -61,8 +62,8 @@ int main() {
     OnImGui(engine);
 
     // Game Loop
-    lvk::commands::RecordGraphicsCommands(*engine.mVK, [&](VkCommandBuffer& cmd,
-                                                          uint32 frame) {
+    lvk::commands::RecordGraphicsCommands(*engine.mVK, [&](VkCommandBuffer &cmd,
+                                                           uint32 frame) {
       lvk::Array<VkClearValue, 2> clearValues{};
       clearValues[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
       clearValues[1].depthStencil = {1.0f, 0};

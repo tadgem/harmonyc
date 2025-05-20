@@ -228,7 +228,7 @@ void AssetManager::HandleAsyncTasks() {
         asyncReturn.mLoadedAssetIntermediate != nullptr) {
       TransitionAssetToLoaded(handle,
                               asyncReturn.mLoadedAssetIntermediate->mAssetData);
-      
+
       HNY_DELETE(asyncReturn.mLoadedAssetIntermediate);
       asyncReturn.mLoadedAssetIntermediate = nullptr;
     } else {

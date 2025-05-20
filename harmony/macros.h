@@ -4,7 +4,7 @@
 #define MEGABYTES(X) X * 1024ULL * 1024ULL
 #define GIGABYTES(X) X * 1024ULL * 1024ULL * 1024ULL
 
-#define NORMAL_PRINT_CODE  "\x1B[0m"
+#define NORMAL_PRINT_CODE "\x1B[0m"
 #define RED_PRINT_CODE "\x1B[31m"
 #define GREEN_PRINT_CODE "\x1B[32m"
 #define YELLOW_PRINT_CODE "\x1B[33m"
@@ -19,16 +19,23 @@
 
 #include <cstdio>
 #define LOGGING_ENABLED
-#ifdef	LOGGING_ENABLED
-#define HNY_LOG_INFO(msg,...)	printf(BLUE_PRINT_CODE "[harmony][info ] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
-#define HNY_LOG_WARN(msg,...)	printf(YELLOW_PRINT_CODE "[harmony][warn ] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
-#define HNY_LOG_ERROR(msg,...)	printf(RED_PRINT_CODE "[harmony][error] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
-#define HNY_LOG_DEBUG(msg,...)	printf(MAGENTA_PRINT_CODE "[harmony][debug] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
-#define HNY_LOG_TRACE(msg,...)	printf(CYAN_PRINT_CODE "[harmony][trace] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
+#ifdef LOGGING_ENABLED
+#define HNY_LOG_INFO(msg, ...)                                                 \
+  printf(BLUE_PRINT_CODE "[harmony][info ] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
+#define HNY_LOG_WARN(msg, ...)                                                 \
+  printf(YELLOW_PRINT_CODE "[harmony][warn ] " NORMAL_PRINT_CODE msg,          \
+         __VA_ARGS__)
+#define HNY_LOG_ERROR(msg, ...)                                                \
+  printf(RED_PRINT_CODE "[harmony][error] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
+#define HNY_LOG_DEBUG(msg, ...)                                                \
+  printf(MAGENTA_PRINT_CODE "[harmony][debug] " NORMAL_PRINT_CODE msg,         \
+         __VA_ARGS__)
+#define HNY_LOG_TRACE(msg, ...)                                                \
+  printf(CYAN_PRINT_CODE "[harmony][trace] " NORMAL_PRINT_CODE msg, __VA_ARGS__)
 #else
-#define HNY_LOG_INFO(msg,...)
-#define HNY_LOG_WARN(msg,...)
-#define HNY_LOG_ERROR(msg,...)
-#define HNY_LOG_DEBUG(msg,...)
-#define HNY_LOG_TRACE(msg,...)
+#define HNY_LOG_INFO(msg, ...)
+#define HNY_LOG_WARN(msg, ...)
+#define HNY_LOG_ERROR(msg, ...)
+#define HNY_LOG_DEBUG(msg, ...)
+#define HNY_LOG_TRACE(msg, ...)
 #endif

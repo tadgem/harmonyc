@@ -55,7 +55,7 @@ public:
 
 template <typename _Ty, AssetType _AssetTypeEnum> class AssetT : public Asset {
 public:
-  _Ty   mData;
+  _Ty mData;
 
   AssetT(const String &path, const _Ty &data)
       : Asset(path, _AssetTypeEnum), mData(data) {};
